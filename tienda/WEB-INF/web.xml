@@ -1,13 +1,42 @@
 <web-app>
-
 	<servlet>
-		<servlet-name>CarritoServlet</servlet-name>
-		<servlet-class>CarritoServlet</servlet-class>
-	</servlet>
+        <servlet-name>CarritoServlet</servlet-name>
+        <servlet-class>CarritoServlet</servlet-class>
+    </servlet>
 
-	<servlet-mapping>
-		<servlet-name>CarritoServlet</servlet-name>
-		<url-pattern>/CarritoServlet</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CarritoServlet</servlet-name>
+        <url-pattern>/CarritoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>VerCarritoServlet</servlet-name>
+        <servlet-class>VerCarritoServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>VerCarritoServlet</servlet-name>
+        <url-pattern>/VerCarritoServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EliminarCDServlet</servlet-name>
+        <servlet-class>EliminarCDServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>EliminarCDServlet</servlet-name>
+        <url-pattern>/EliminarCDServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PagarServlet</servlet-name>
+        <servlet-class>PagarServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PagarServlet</servlet-name>
+        <url-pattern>/PagarServlet</url-pattern>
+    </servlet-mapping>
 
 </web-app>

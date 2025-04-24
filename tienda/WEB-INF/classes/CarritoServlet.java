@@ -49,6 +49,6 @@ public class CarritoServlet extends HttpServlet {
         }
         
         // Redirigir a outro servlet:
-        response.sendRedirect(VerCarritoServlet);
+        response.sendRedirect("VerCarritoServlet");
     }
 }

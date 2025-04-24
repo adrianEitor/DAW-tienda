@@ -1,7 +1,0 @@
-      // Recuperamos informacion del precio del CD
-      StringTokenizer t = new StringTokenizer(descripcionCD,"|");
-      t.nextToken();
-      t.nextToken();
-      t.nextToken();
-      precioString = t.nextToken();
-      precioString = precioString.replace('$',' ').trim();
