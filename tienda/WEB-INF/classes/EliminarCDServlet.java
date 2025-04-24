@@ -16,7 +16,11 @@ public class EliminarCDServlet extends HttpServlet {
                 try {
                     int index = Integer.parseInt(request.getParameter("index"));
                     if (index >= 0 && index < carrito.size()) {
-                        carrito.remove(index);
+                        CD cd = carrito.get(index);
+                        cd.setCantidad(cd.getCantidad()-1);
+                        if(cd.getCantidad() == 0){
+                            carrito.remove(index);
+                        }
                     }
                 } catch (NumberFormatException e) {
                     // Ignore invalid index
