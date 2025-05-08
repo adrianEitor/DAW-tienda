@@ -1,65 +1,50 @@
-// VerCarritoServlet.java
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+// Si estás usando anotaciones para el mapeo (Servlet 3.0+):
+// import javax.servlet.annotation.WebServlet;
+// @WebServlet("/VerCarritoServlet")
 public class VerCarritoServlet extends HttpServlet {
-    
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("carrito") == null) {
-            response.sendRedirect("index.html");
-            return;
+
+        HttpSession session = request.getSession(false); // No crear nueva sesión si no existe
+        List<CD> carrito = null;
+        float totalGeneral = 0.0f;
+
+        if (session != null) {
+            // El warning de unchecked se puede suprimir con @SuppressWarnings("unchecked")
+            // si estás seguro del tipo.
+            @SuppressWarnings("unchecked")
+            List<CD> carritoEnSesion = (List<CD>) session.getAttribute("carrito");
+            carrito = carritoEnSesion; // Asignar incluso si es null
         }
-        
-        List<CD> carrito = (List<CD>) session.getAttribute("carrito");
-        
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Carrito de Compras</title>");
-        out.println("</head>");
-        out.println("<body bgcolor=\"#FDF5E6\">");
-        out.println("<h1 align=\"center\">Carrito de Compras</h1>");
-        
-        out.println("<table border=\"1\" align=\"center\">");
-        out.println("<tr>");
-        out.println("<th>TITULO DEL CD</th>");
-        out.println("<th>Cantidad</th>");
-        out.println("<th>Importe</th>");
-        out.println("<th>Acción</th>");
-        out.println("</tr>");
-        
-        float total = 0;
-        for (int i = 0; i < carrito.size(); i++) {
-            CD cd = carrito.get(i);
-            out.println("<tr>");
-            out.println("<td>" + cd.getTitulo() + " | " + cd.getArtista() + " | " + cd.getPais() + " | $" + cd.getPrecio() + "</td>");
-            out.println("<td>" + cd.getCantidad() + "</td>");
-            out.println("<td>" + cd.getImporte() + "</td>");
-            out.println("<td><a href=\"EliminarCDServlet?index=" + i + "\">Eliminar</a></td>");
-            out.println("</tr>");
-            total += cd.getImporte();
+
+        if (carrito != null && !carrito.isEmpty()) {
+            for (CD cd : carrito) {
+                totalGeneral += cd.getImporte();
+            }
         }
-        
-        out.println("<tr>");
-        out.println("<td colspan=\"2\"><b>IMPORTE TOTAL</b></td>");
-        out.println("<td><b>" + total + "</b></td>");
-        out.println("<td></td>");
-        out.println("</tr>");
-        out.println("</table>");
-        
-        out.println("<p align=\"center\">");
-        out.println("<a href=\"index.html\">Sigo comprando</a> | ");
-        out.println("<a href=\"PagarServlet\">Me largo a pagar</a>");
-        out.println("</p>");
-        
-        out.println("</body>");
-        out.println("</html>");
+
+        // Poner los datos en el request para que el JSP pueda acceder a ellos
+        request.setAttribute("carrito", carrito); // Puede ser null o vacío
+        request.setAttribute("totalGeneral", totalGeneral);
+
+        // Reenviar la petición al JSP para que muestre los datos
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/verCarrito.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    // doPost podría simplemente llamar a doGet si la lógica es la misma
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }
