@@ -1,1 +1,1 @@
-Aiquí van .jar de JSTL e .jar da conexión de bases de datos
+Aiquí van .jar de JSTL e .jar da conexión de bases de datos.
