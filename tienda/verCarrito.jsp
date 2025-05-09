@@ -52,14 +52,14 @@
             <%-- Imágenes y enlaces como en Figura 2 --%>
             <div class="center-text" style="margin-top: 20px;">
                 <img src="${pageContext.request.contextPath}/images/shopping_cart.png" alt="Carrito" class="cart-image"/>
-                <a href="${pageContext.request.contextPath}/index.html">Sigo comprando</a> |
-                <a href="${pageContext.request.contextPath}/PagarServlet">Me largo a pagar</a>
+                <a href="${pageContext.request.contextPath}/index.jsp">Sigo comprando</a> |
+                <a href="${pageContext.request.contextPath}/CalcularPagoServlet">Me largo a pagar</a>
             </div>
 
         </c:when>
         <c:otherwise>
             <p class="center-text">El carrito está vacío.</p>
-            <p class="center-text"><a href="${pageContext.request.contextPath}/index.html">Volver a la tienda</a></p>
+            <p class="center-text"><a href="${pageContext.request.contextPath}/index.jsp">Volver a la tienda</a></p>
         </c:otherwise>
     </c:choose>
 </body>

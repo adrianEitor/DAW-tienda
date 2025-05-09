@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
@@ -19,8 +21,15 @@
 
         <%-- Imagen como en Figura 3 --%>
         <img src="${pageContext.request.contextPath}/images/cash_register.png" alt="Caja" class="payment-image"/>
-
-        <p><a href="${pageContext.request.contextPath}/index.html">Pagar y volver a la página principal</a></p>
+        
+        <c:choose>
+            <c:when test="${not empty usuario}">
+                <p><a href="${pageContext.request.contextPath}/PagarServlet?importeFinal=${importeFinal}">Pagar y volver a la página principal</a></p>
+            </c:when>
+            <c:otherwise>
+                <p><a href="${pageContext.request.contextPath}/login.jsp">Registrarse para pagar</a></p>
+            </c:otherwise>
+        </c:choose>
         <p style="margin-top: 30px;">(Simulación: Gracias por su compra)</p>
     </div>
 </body>
