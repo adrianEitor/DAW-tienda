@@ -23,7 +23,7 @@ public class PagarServlet extends HttpServlet {
                     // Meter el pedido en la base de datos
                     BaseDatos bd = (BaseDatos) session.getAttribute("bd");
                     String emailUsuario = (String) session.getAttribute("usuario");
-                    Pedido pedido = new Pedido(bd.obtenerUsuarioPorEmail(emailUsuario).getId(), (Float) session.getAttribute("importeFinal"));
+                    Pedido pedido = new Pedido(bd.obtenerUsuarioPorEmail(emailUsuario).getId(), Float.parseFloat(request.getParameter("importeFinal")));
                     bd.agregarPedido(pedido);
                 }
             } catch (SQLException e) {
