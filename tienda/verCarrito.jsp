@@ -26,8 +26,17 @@
         </c:if>
     </div>
 
+    <%-- LÓGICA DE PRESENTACIÓN DEL CARRITO USANDO JSTL y EL --%>
+    <%-- JSTL <c:choose> permite una estructura condicional similar a if-else if-else. --%>
     <c:choose>
-        <%-- USAREMOS LAS PROPIEDADES DEL OBJETO 'carrito' (instancia de tu clase Carrito) --%>
+
+         <%-- Condición <c:when>: Se ejecuta si el carrito NO está vacío.
+             EL (${not empty carrito}): Verifica si el atributo carrito (que es una instancia
+                                      de tu JavaBean Carrito, puesto en el request por
+                                      AccionVerCarrito) no es null.
+             EL (${not carrito.vacio}): Accede a la propiedad vacio del JavaBean Carrito
+                                      (invocando el método isVacio() o getVacio()).
+                                      La negación not verifica que el carrito NO esté vacío. --%>
         <c:when test="${not empty carrito && not carrito.vacio}">
             <table class="center-table" border="1">
                 <thead>
@@ -40,19 +49,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%-- ACCEDE A LA LISTA DE ITEMS A TRAVÉS DE ${carrito.items} --%>
+                    
+                    <%-- JSTL <c:forEach>: Itera sobre una colección.
+                         items="${carrito.items}": La colección sobre la que se itera. EL (${carrito.items})
+                                                  accede a la propiedad 'items' del JavaBean 'Carrito'
+                                                  (invocando su método getItems()), que devuelve la List<CD>.
+                         var="cdItem": Nombre de la variable que representará cada elemento (un objeto CD)
+                                       en cada iteración del bucle.
+                         varStatus="loop": Crea una variable 'loop' que proporciona información sobre
+                                           el estado de la iteración (ej., loop.index para el índice actual). --%>
                     <c:forEach var="cdItem" items="${carrito.items}" varStatus="loop">
                         <tr>
+
+                            <%-- ACCESO A PROPIEDADES DEL JAVABEAN CD (representado por cdItem) USANDO EL --%>
+                            <%-- ${cdItem.titulo} invoca cdItem.getTitulo() --%>
+                            <%-- ${cdItem.artista} invoca cdItem.getArtista() --%>
+                            <%-- ${cdItem.pais} invoca cdItem.getPais() --%>
+
                             <td>${cdItem.titulo} | ${cdItem.artista} | ${cdItem.pais}</td>
-                            <td class="center-text">${cdItem.cantidad}</td>
-                            <%-- MUESTRA EL PRECIO UNITARIO DEL CD --%>
+                            <td class="center-text">${cdItem.cantidad}</td> <%-- invoca cdItem.getCantidad() --%>
+                            
+                            <%-- Uso de JSTL <fmt:formatNumber> para mostrar el precio unitario del CD como moneda. --%>
+                            <%-- value="${cdItem.precio}" accede a cdItem.getPrecio() --%>
                             <td class="right-text"><fmt:formatNumber value="${cdItem.precio}" type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2"/></td>
-                            <%-- MUESTRA EL IMPORTE (SUBTOTAL) DEL CD (precio * cantidad) --%>
+                            
+                            <%-- Uso de JSTL <fmt:formatNumber> para mostrar el importe (subtotal) del CD. --%>
+                            <%-- value="${cdItem.importe}" accede a la propiedad calculada cdItem.getImporte() --%>
                             <td class="right-text"><fmt:formatNumber value="${cdItem.importe}" type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2"/></td>
+                            
                             <td class="center-text">
-                                <%-- CAMBIO: ENLACE A AppController CON ACCIÓN Y PARÁMETRO INDEX --%>
+                                <%-- Enlace para eliminar un ítem. Apunta al AppController con la acción 'eliminarCD'.
+                                     Se pasa el index del ítem actual en el bucle como parámetro de la URL.
+                                     EL (${loop.index}) obtiene el índice de la iteración actual. --%>
                                 <a href="${pageContext.request.contextPath}/app?accion=eliminarCD&index=${loop.index}">Eliminar uno</a>
                             </td>
+
                         </tr>
                     </c:forEach>
                 </tbody>

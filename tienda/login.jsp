@@ -79,18 +79,56 @@
             <p class="exito">${exitoRegistro}</p>
         </c:if>
 
+        <%-- ======================================================================= --%>
+        <%-- FORMULARIO DE INICIO DE SESIÓN                                            --%>
+        <%-- ======================================================================= --%>
+        <%-- action: URL a la que se enviarán los datos del formulario.
+             Aquí, apunta al AppController (${pageContext.request.contextPath}/app).
+             El AppController usará el parámetro accion para determinar qué hacer. --%>
+        <%-- method="post": Los datos del formulario se enviarán en el cuerpo de la petición HTTP,
+             lo cual es más seguro para credenciales que enviarlos en la URL (como haría GET). --%>
         <form action="${pageContext.request.contextPath}/app" method="post">
+            
+            <%-- CAMPO OCULTO accion:
+                 Este campo no es visible para el usuario, pero su valor ("login") se envía
+                 junto con los otros datos del formulario. El AppController leerá este
+                 parámetro para saber que esta petición específica es para la acción de login. --%>
             <input type="hidden" name="accion" value="login">
+
             <div class="form-group">
                 <label for="emailLogin">Email:</label>
-                <%-- USAR param.email_login PARA REPOBLAR EL CAMPO SI HAY ERROR EN LOGIN --%>
+                <%-- CAMPO DE ENTRADA PARA EL EMAIL:
+                     type="email": Indica al navegador que espere una dirección de email,
+                                   puede activar validaciones básicas del navegador.
+                     id="emailLogin": Identificador único para este elemento en la página (útil para JavaScript o el 'for' de la label).
+                     name="email_login": NOMBRE DEL PARÁMETRO que se enviará al servidor.
+                                        AccionLogin leerá request.getParameter("email_login").
+                     required: Atributo HTML5 que indica que este campo no puede estar vacío.
+                     value="${param.email_login}": REPOBLACIÓN DEL CAMPO. Si AccionLogin detecta un error
+                                                 y hace forward de vuelta a esta página, y si puso
+                                                 el email original como un atributo del request llamado
+                                                 "param_email_login" (o si el forward conserva los parámetros originales),
+                                                 este campo se rellenará con el valor que el usuario había ingresado.
+                                                 Alternativamente, si AccionLogin usa request.setAttribute("emailLoginValor", email);
+                                                 entonces aquí sería value="${emailLoginValor}".
+                                                 `${param.nombre}` accede directamente a los parámetros de la petición original. --%>
                 <input type="email" id="emailLogin" name="email_login" required value="${param.email_login}">
             </div>
+
             <div class="form-group">
                 <label for="passwordLogin">Contraseña:</label>
+                 <%-- CAMPO DE ENTRADA PARA LA CONTRASEÑA:
+                     type="password": Los caracteres se muestran ocultos (ej. asteriscos).
+                     id="passwordLogin": Identificador único.
+                     name="password_login": NOMBRE DEL PARÁMETRO para el servidor.
+                     required: Campo obligatorio.
+                     (No se repobla la contraseña por razones de seguridad). --%>
                 <input type="password" id="passwordLogin" name="password_login" required>
             </div>
+            
+            <%-- BOTÓN DE ENVÍO DEL FORMULARIO DE LOGIN --%>
             <input type="submit" value="Iniciar Sesión" class="btn btn-login">
+
         </form>
 
         <hr>
@@ -101,25 +139,41 @@
             <p class="error">${errorRegistro}</p>
         </c:if>
 
+        <%-- ======================================================================= --%>
+        <%-- FORMULARIO DE REGISTRO                                                    --%>
+        <%-- ======================================================================= --%>
+        <%-- 'action': También apunta al AppController. --%>
         <form action="${pageContext.request.contextPath}/app" method="post">
+            <%-- CAMPO OCULTO 'accion':
+                 Su valor ("registro") le dice al AppController que esta petición es para la acción de registro. --%>
             <input type="hidden" name="accion" value="registro">
+            
             <div class="form-group">
+
                 <label for="nombreReg">Nombre:</label>
-                 <%-- USAR param.nombre_reg PARA REPOBLAR SI HAY ERROR EN REGISTRO --%>
+
+                <%-- name="nombre_reg": Nombre del parámetro para el nombre completo.
+                     value="${param.nombre_reg}": Repoblar en caso de error de registro. --%>
                 <input type="text" id="nombreReg" name="nombre_reg" required value="${param.nombre_reg}">
             </div>
+
             <div class="form-group">
                 <label for="emailReg">Email:</label>
                 <input type="email" id="emailReg" name="email_reg" required value="${param.email_reg}">
             </div>
+
             <div class="form-group">
                 <label for="passwordReg">Contraseña:</label>
                 <input type="password" id="passwordReg" name="password_reg" required>
             </div>
+
             <div class="form-group">
                 <label for="tarjetaReg">Tarjeta de crédito (opcional):</label>
+                <%-- name="tarjeta_reg": Nombre del parámetro. No es 'required'. --%>
                 <input type="text" id="tarjetaReg" name="tarjeta_reg" value="${param.tarjeta_reg}">
             </div>
+
+            <%-- BOTÓN DE ENVÍO DEL FORMULARIO DE REGISTRO --%>
             <input type="submit" value="Registrarse" class="btn btn-register">
         </form>
         <div class="link-container">

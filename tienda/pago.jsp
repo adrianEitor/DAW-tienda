@@ -33,31 +33,51 @@
             <h2 class="error">Error: ${error}</h2>
         </c:if>
 
-         <p class="bold-text">TOTAL A PAGAR:</p>
+        <%-- MOSTRAR EL TOTAL A PAGAR --%>
+        <%-- Este valor '${importeFinal}' es establecido por AccionCalcularPago
+             y también por AccionProcesarPago (para mostrarlo incluso si hay error). --%>
+        <p class="bold-text">TOTAL A PAGAR:</p>
         <p class="total-amount">
+             <%-- Utiliza la etiqueta JSTL <fmt:formatNumber> para mostrar el importe
+                 con formato de moneda (símbolo '$', dos decimales). --%>
             <fmt:formatNumber value="${importeFinal}" type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2"/>
         </p>
 
-        <%-- CAMBIO: El formulario de pago ahora hace POST a AppController con accion=procesarPago --%>
-        <%-- Mostrar el botón/formulario de pago solo si no hay mensaje de éxito 
-             Y si hay un importe a pagar (o si hubo un error y se quiere reintentar) --%>
+        <%-- FORMULARIO DE CONFIRMACIÓN DE PAGO --%>
+        <%-- Este formulario solo se muestra si NO hay un mensaje de éxito (mensajeExito está vacío)
+             Y (hay un importe final mayor que cero O hay un mensaje de error previo).
+             Esto evita que el usuario intente pagar de nuevo si ya se procesó con éxito
+             o si no hay nada que pagar. --%>
         <c:if test="${empty mensajeExito && (importeFinal > 0 || not empty error)}">
+            <%-- El action del formulario apunta al AppController. --%>
             <form action="${pageContext.request.contextPath}/app" method="post">
+                <%-- Campo oculto accion para indicar al AppController que se está procesando un pago. --%>
                 <input type="hidden" name="accion" value="procesarPago">
-                <%-- Enviar el importe que se está confirmando --%>
+                
+                 <%-- Campo oculto importeFinalConfirmado:
+                     Este campo es CRUCIAL. Envía el valor de ${importeFinal} (que se mostró al usuario)
+                     de vuelta al servidor (a AccionProcesarPago).
+                     AccionProcesarPago puede usar este valor para:
+                     1. Confirmar que el importe no ha sido manipulado (comparándolo con el total
+                        real del carrito en sesión).
+                     2. Registrar el pedido con este importe. --%>
                 <input type="hidden" name="importeFinalConfirmado" value="${importeFinal}">
                 <br>
                 <input type="submit" value="Confirmar y Pagar Ahora">
             </form>
         </c:if>
         
+        <%-- Mostrar la imagen de la caja registradora solo si el pago fue exitoso. --%>
         <c:if test="${not empty mensajeExito}">
             <img src="${pageContext.request.contextPath}/images/cash_register.png" alt="Caja" class="payment-image"/>
         </c:if>
         
+         <%-- ENLACE PARA VOLVER A LA TIENDA --%>
         <p style="margin-top: 20px;"><a href="${pageContext.request.contextPath}/index.jsp">Volver a la Tienda</a></p>
 
         <%-- Logica futura de ver mis pedidos. --%>
+        <%-- ENLACE OPCIONAL PARA VER PEDIDOS (si el usuario está autenticado y el pago fue exitoso) --%>
+        <%-- Comprueba si hay un usuario en sesión y si hubo un mensaje de éxito del pago. --%>
 
     </div>
 

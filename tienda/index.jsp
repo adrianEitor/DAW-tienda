@@ -29,16 +29,20 @@
 					<p>Bienvenido desconocido</p>
 
 					<%-- ENLACES APUNTAN A JSP DIRECTAMENTE --%>
-                	<a href="${pageContext.request.contextPath}/login.jsp">Iniciar Sesión</a> | 
-                	<a href="${pageContext.request.contextPath}/login.jsp">Registrarse</a>
-
+                	<a href="${pageContext.request.contextPath}/login.jsp">Iniciar Sesión / Registrarse</a>
 				</c:otherwise>
 			</c:choose>
 
+			<%-- FORMULARIO PARA AÑADIR CDs AL CARRITO --%>
+            <%-- El action del formulario apunta al AppController. --%>
 			<form action="${pageContext.request.contextPath}/app" method="post">
+				<%-- Campo oculto accion para indicar al AppController qué tarea realizar. --%>
 				<input type="hidden" name="accion" value="agregarCD">
 				<b>CD:</b> 
-			<select name="cd">
+			<select name="cd"> <%-- El valor de la opción seleccionada se enviará como parámetro cd. --%>
+
+				<%-- Los valores de las <option> contienen la información del CD separada por '|',
+                     que será parseada por AccionAgregarAlCarrito. --%>
 
 			    <option value="Yuan|The Guo Brothers|China|$14.95">Yuan | The Guo Brothers | China | $14.95</option>
                 <option value="Drums of Passion|Babatunde Olatunji|Nigeria|$16.95">Drums of Passion | Babatunde Olatunji | Nigeria | $16.95</option>
@@ -62,7 +66,8 @@
 			</center>
 			</form>
 
-		<%-- CAMBIO: ENLACE A AppController --%>
+		<%-- ENLACE PARA VER EL CARRITO --%>
+        <%-- Apunta al AppController con la acción verCarrito. --%>
         <p><a href="${pageContext.request.contextPath}/app?accion=verCarrito">Ver Carrito</a></p>
 		
 		<%-- POSIBLE MEJORA: Lógica para "Ver Mis Pedidos" si el usuario está autenticado --%>
