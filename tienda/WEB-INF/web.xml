@@ -1,69 +1,22 @@
 <web-app>
 
-    <servlet>
-        <servlet-name>CarritoServlet</servlet-name>
-        <servlet-class>CarritoServlet</servlet-class>
-    </servlet>
+    <display-name>Tienda</display-name>
 
-    <servlet-mapping>
-        <servlet-name>CarritoServlet</servlet-name>
-        <url-pattern>/CarritoServlet</url-pattern>
-    </servlet-mapping>
+     <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file> 
+    </welcome-file-list>
 
+     <!-- INICIO: DEFINICIÓN DEL FRONT CONTROLLER SERVLET -->
     <servlet>
-        <servlet-name>CalcularPagoServlet</servlet-name>
-        <servlet-class>CalcularPagoServlet</servlet-class>
+        <servlet-name>AppController</servlet-name>
+        <servlet-class>AppController</servlet-class> 
     </servlet>
     
+    <!-- MAPEO DEL FRONT CONTROLLER PARA QUE MANEJE LAS PETICIONES A /app -->
     <servlet-mapping>
-        <servlet-name>CalcularPagoServlet</servlet-name>
-        <url-pattern>/CalcularPagoServlet</url-pattern>
+        <servlet-name>AppController</servlet-name>
+        <url-pattern>/app</url-pattern>
     </servlet-mapping>
+    <!-- FIN: DEFINICIÓN DEL FRONT CONTROLLER SERVLET -->
 
-    <servlet>
-        <servlet-name>VerCarritoServlet</servlet-name>
-        <servlet-class>VerCarritoServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>VerCarritoServlet</servlet-name>
-        <url-pattern>/VerCarritoServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>EliminarCDServlet</servlet-name>
-        <servlet-class>EliminarCDServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>EliminarCDServlet</servlet-name>
-        <url-pattern>/EliminarCDServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>PagarServlet</servlet-name>
-        <servlet-class>PagarServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>PagarServlet</servlet-name>
-        <url-pattern>/PagarServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>LoginServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>RegistroServlet</servlet-name>
-        <servlet-class>RegistroServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>RegistroServlet</servlet-name>
-        <url-pattern>/RegistroServlet</url-pattern>
-    </servlet-mapping>
 </web-app>

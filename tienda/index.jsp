@@ -4,8 +4,8 @@
 
 <!DOCTYPE html> 
   <html>
-	<meta charset="UTF-8">
     <head>
+	  <meta charset="UTF-8">
       <title>Música para DAA</title>
     </head>
     <body bgcolor="#FDF5E6">
@@ -20,34 +20,53 @@
 		<p>
 		<center>
 			<c:choose>
-				<c:when test="${not empty usuario}">
-					<p>Bienvenido ${usuario}</p>
+				<c:when test="${not empty sessionScope.usuarioAutenticado}">
+					<p>Bienvenido, ${sessionScope.usuarioAutenticado.nombre}!</p>
+					<%-- <a href="${pageContext.request.contextPath}/app?accion=logout">Cerrar Sesión</a> --%>
 				</c:when>
+
 				<c:otherwise>
 					<p>Bienvenido desconocido</p>
+
+					<%-- ENLACES APUNTAN A JSP DIRECTAMENTE --%>
+                	<a href="${pageContext.request.contextPath}/login.jsp">Iniciar Sesión</a> | 
+                	<a href="${pageContext.request.contextPath}/login.jsp">Registrarse</a>
+
 				</c:otherwise>
 			</c:choose>
-			<form action="CarritoServlet" method="post">
-			<b>CD:</b> 
+
+			<form action="${pageContext.request.contextPath}/app" method="post">
+				<input type="hidden" name="accion" value="agregarCD">
+				<b>CD:</b> 
 			<select name="cd">
-			<option>Yuan | The Guo Brothers | China | $14.95</option>
-			<option>Drums of Passion | Babatunde Olatunji | Nigeria | $16.95</option>
-			<option>Kaira | Tounami Diabate| Mali | $16.95</option>
-			<option>The Lion is Loose | Eliades Ochoa | Cuba | $13.95</option>
-			<option>Dance the Devil Away | Outback | Australia | $14.95</option>
-			<option>Record of Changes | Samulnori | Korea | $12.95</option>
-			<option>Djelika | Tounami Diabate | Mali | $14.95</option>
-			<option>Rapture | Nusrat Fateh Ali Khan | Pakistan | $12.95</option>
-			<option>Cesaria Evora | Cesaria Evora | Cape Verde | $16.95</option>
-			<option>DAA | GSTIC | Spain | $50.00</option>
+
+			    <option value="Yuan|The Guo Brothers|China|$14.95">Yuan | The Guo Brothers | China | $14.95</option>
+                <option value="Drums of Passion|Babatunde Olatunji|Nigeria|$16.95">Drums of Passion | Babatunde Olatunji | Nigeria | $16.95</option>
+                <option value="Kaira|Tounami Diabate|Mali|$16.95">Kaira | Tounami Diabate| Mali | $16.95</option>
+                <option value="The Lion is Loose|Eliades Ochoa|Cuba|$13.95">The Lion is Loose | Eliades Ochoa | Cuba | $13.95</option>
+                <option value="Dance the Devil Away|Outback|Australia|$14.95">Dance the Devil Away | Outback | Australia | $14.95</option>
+                <option value="Record of Changes|Samulnori|Korea|$12.95">Record of Changes | Samulnori | Korea | $12.95</option>
+                <option value="Djelika|Tounami Diabate|Mali|$14.95">Djelika | Tounami Diabate | Mali | $14.95</option>
+                <option value="Rapture|Nusrat Fateh Ali Khan|Pakistan|$12.95">Rapture | Nusrat Fateh Ali Khan | Pakistan | $12.95</option>
+                <option value="Cesaria Evora|Cesaria Evora|Cape Verde|$16.95">Cesaria Evora | Cesaria Evora | Cape Verde | $16.95</option>
+                <option value="DAA|GSTIC|Spain|$50.00">DAA | GSTIC | Spain | $50.00</option>
+
 			</select>
+
 			<b>Cantidad:</b>
-			<input type="text" name="cantidad" value="1">
+
+			<input type="number" name="cantidad" value="1" min="1">
 			<p>
 			<center>
-				<input type="submit" value="Selecciona Producto">
+				<input type="submit" value="Añadir al Carrito">
 			</center>
 			</form>
+
+		<%-- CAMBIO: ENLACE A AppController --%>
+        <p><a href="${pageContext.request.contextPath}/app?accion=verCarrito">Ver Carrito</a></p>
+		
+		<%-- POSIBLE MEJORA: Lógica para "Ver Mis Pedidos" si el usuario está autenticado --%>
+
 		</center>
 	  <hr>
     </body>
