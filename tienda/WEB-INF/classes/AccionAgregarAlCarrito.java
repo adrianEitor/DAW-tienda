@@ -5,62 +5,174 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class AccionAgregarAlCarrito implements Accion {
+/**
+ * ============================================================================
+ * CLASE AccionAgregarAlCarrito
+ * ============================================================================
+ * IMPLEMENTA: Interfaz Accion
+ *
+ * PROPÓSITO:
+ * Esta clase encapsula toda la lógica de negocio necesaria para procesar la
+ * solicitud de un usuario de agregar un CD (con una cantidad específica) a su
+ * carrito de la compra.
+ * Es un "Worker" o "Helper" en el patrón Service to Worker, invocado por el
+ * AppController cuando el parámetro "accion" es "agregarCD".
+ *
+ * FUNCIONAMIENTO:
+ * 1. Obtiene o crea la sesión HTTP del usuario.
+ * 2. Obtiene el objeto Carrito de la sesión. Si no existe, crea uno nuevo y lo guarda en sesión.
+ * 3. Recupera los parámetros de la petición: el CD seleccionado (una cadena con
+ *    información del CD separada por '|') y la cantidad deseada.
+ * 4. Parsea la cantidad, con un valor por defecto si es inválida.
+ * 5. Parsea la información del CD seleccionado (título, artista, país, precio)
+ *    utilizando StringTokenizer.
+ * 6. Crea un nuevo objeto CD (JavaBean) y establece sus propiedades con los
+ *    datos parseados.
+ * 7. Llama al método agregarItem() del objeto Carrito para añadir el nuevo CD
+ *    (o actualizar la cantidad si el CD ya existía).
+ * 8. Realiza una redirección (sendRedirect) a la acción "verCarrito" (manejada
+ *    por AppController) para que el usuario vea el carrito actualizado.
+ *    Esto sigue el patrón Post/Redirect/Get para evitar reenvíos de formulario.
+ * 9. Devuelve null para indicar al AppController que la respuesta ya fue manejada.
+ */
+public class AccionAgregarAlCarrito implements Accion 
+{
 
+    /**
+     * ------------------------------------------------------------------------
+     * MÉTODO ejecutar (Implementación de la interfaz Accion)
+     * ------------------------------------------------------------------------
+     * Contiene la lógica principal para agregar un CD al carrito.
+     */
     @Override
-    public String ejecutar(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+    public String ejecutar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        // --- 1. GESTIÓN DE LA SESIÓN Y EL CARRITO ---
+        // Obtener la sesión HTTP actual. Si no existe, se crea una nueva (gracias a true).
         HttpSession session = request.getSession(true);
+
+        // Intentar obtener el objeto Carrito que podría estar ya almacenado en la sesión.
+        // La clave "carrito" debe ser la misma que se usa en todas partes para este objeto.
         Carrito carrito = (Carrito) session.getAttribute("carrito");
-        if (carrito == null) {
+
+        // Si no se encontró ningún objeto Carrito en la sesión (ej. es la primera vez
+        // que el usuario añade algo, o la sesión expiró y se creó una nueva),
+        // entonces se crea una nueva instancia del JavaBean Carrito.
+        if (carrito == null)
+        {
+            // Llama al constructor por defecto de Carrito.
             carrito = new Carrito();
+
+            // Guardar el nuevo objeto Carrito en la sesión para futuras peticiones.
             session.setAttribute("carrito", carrito);
         }
         
+        // --- 2. OBTENCIÓN DE PARÁMETROS DE LA PETICIÓN ---
+
+        // Obtener la cadena que representa el CD seleccionado del formulario (del <select name="cd">).
         String cdSeleccionado = request.getParameter("cd");
+
+        // Obtener la cadena que representa la cantidad del formulario (del <input name="cantidad">).
         String cantidadStr = request.getParameter("cantidad");
+
+        // Establecer una cantidad por defecto de 1.
         int cantidad = 1;
         
-        try {
-            if (cantidadStr != null && !cantidadStr.trim().isEmpty()) {
+         // --- 3. PARSEO Y VALIDACIÓN DE LA CANTIDAD ---
+
+        try 
+        {
+            // Solo intentar parsear si cantidadStr no es nulo y no está vacío después de quitar espacios.
+            if (cantidadStr != null && !cantidadStr.trim().isEmpty())
+            {
+                // Convertir la cadena a un entero.
                 cantidad = Integer.parseInt(cantidadStr.trim());
+
+                // Asegurar que la cantidad sea al menos 1.
                 if (cantidad <= 0) cantidad = 1;
             }
-        } catch (NumberFormatException e) {
+        } 
+        catch (NumberFormatException e) 
+        {
+            // Si la cadena de cantidad no es un número válido, se mantiene la cantidad por defecto (1).
+            // No se interrumpe el flujo, se asume 1.
             cantidad = 1;
+
+            System.err.println("AccionAgregarAlCarrito: Cantidad inválida '" + cantidadStr + "', usando 1.");
         }
         
-        if (cdSeleccionado != null && !cdSeleccionado.isEmpty()) {
+        // --- 4. PARSEO DEL CD SELECCIONADO Y CREACIÓN DEL OBJETO CD ---
+
+        // Solo proceder si se seleccionó un CD y la cadena no está vacía.
+        if (cdSeleccionado != null && !cdSeleccionado.isEmpty()) 
+        {
+            // Usar StringTokenizer para dividir la cadena cdSeleccionado usando '|' como delimitador.
+            // Formato esperado: "Titulo|Artista|Pais|$Precio"
             StringTokenizer tokenizer = new StringTokenizer(cdSeleccionado, "|");
-            if (tokenizer.countTokens() >= 4) {
-                String titulo = tokenizer.nextToken().trim();
-                String artista = tokenizer.nextToken().trim();
-                String pais = tokenizer.nextToken().trim();
-                String precioStr = tokenizer.nextToken().trim().replace("$", "").trim();
-                try {
+
+            // Verificar si la cadena tiene al menos los 4 componentes esperados.
+            if (tokenizer.countTokens() >= 4) 
+            {
+                String titulo = tokenizer.nextToken().trim(); // Obtener y limpiar el título.
+                String artista = tokenizer.nextToken().trim(); // Obtener y limpiar el artista.
+                String pais = tokenizer.nextToken().trim(); // Obtener y limpiar el país.
+                String precioStr = tokenizer.nextToken().trim().replace("$", "").trim(); // Obtener precio, quitar $ y limpiar.
+
+                try 
+                {
+                    // Convertir la cadena del precio a float.
                     float precio = Float.parseFloat(precioStr);
+
+                    // Crear una nueva instancia del JavaBean CD utilizando su constructor por defecto.
                     CD nuevoCd = new CD();
+
+                    // Establecer las propiedades del nuevo objeto CD usando sus métodos setter.
                     nuevoCd.setTitulo(titulo);
                     nuevoCd.setArtista(artista);
                     nuevoCd.setPais(pais);
                     nuevoCd.setPrecio(precio);
-                    nuevoCd.setCantidad(cantidad);
+                    nuevoCd.setCantidad(cantidad); // Establecer la cantidad parseada (o por defecto).
+                    
+                    
+                    // Usar el método agregarItem del objeto Carrito para añadir el nuevoCd.
+                    // Este método manejará la lógica de si el CD ya existe (actualizar cantidad)
+                    // o si es un nuevo ítem en el carrito.
                     carrito.agregarItem(nuevoCd);
-                } catch (NumberFormatException e) {
+                } 
+                catch (NumberFormatException e) 
+                {
+                    // Si ocurre un error al convertir el precio a float.
                     System.err.println("AccionAgregarAlCarrito: Error al parsear precio: " + precioStr);
+
+                    // Guardar un mensaje de error en el request para que el JSP (si se hiciera forward) lo muestre.
+                    // Sin embargo, como esta acción hace sendRedirect, este atributo se perdería
+                    // a menos que se pase como parámetro en la URL de redirección o se guarde en sesión.
                     request.setAttribute("errorCarrito", "Error al procesar el CD seleccionado.");
                 }
-            } else {
+            } 
+            else 
+            {
+                // Si la cadena del CD seleccionado no tiene el formato esperado.
                 System.err.println("AccionAgregarAlCarrito: Formato de CD seleccionado incorrecto.");
                 request.setAttribute("errorCarrito", "Datos del CD incompletos.");
             }
         }
         
-        // Después de agregar, redirigimos a VerCarrito para mostrar el estado actualizado
-        // y evitar problemas de reenvío de formulario si el usuario recarga.
-        // Por lo tanto, esta acción no devuelve una vista JSP directamente.
+         // --- 5. REDIRECCIÓN ---
+        // Después de procesar la adición del CD (o intentar hacerlo),
+        // se realiza una redirección a otra acción del AppController.
+        // En este caso, se redirige a la acción "verCarrito".
+        // request.getContextPath() obtiene la ruta base de la aplicación (ej. "/tienda").
+        // Esto asegura que la URL de redirección sea correcta independientemente de cómo
+        // esté desplegada la aplicación.
+        // Esta redirección sigue el patrón Post/Redirect/Get (PRG), que ayuda a:
+        //  a. Evitar que el usuario reenvíe el mismo formulario si recarga la página
+        //     después de un POST exitoso (lo que podría añadir el mismo CD de nuevo).
+        //  b. Mantener la URL del navegador limpia, mostrando la URL de la vista del carrito.
         response.sendRedirect(request.getContextPath() + "/app?accion=verCarrito"); // Llama al AppController con la acción verCarrito
+
+        // Se devuelve null porque la respuesta ya ha sido manejada por sendRedirect().
+        // El AppController no necesita hacer un forward a ningún JSP desde esta acción.
         return null; // Indica que la respuesta ya fue manejada (sendRedirect)
     }
 }

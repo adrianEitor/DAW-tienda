@@ -6,68 +6,192 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class AccionProcesarPago implements Accion {
-
+/**
+ * ============================================================================
+ * CLASE AccionProcesarPago
+ * ============================================================================
+ * IMPLEMENTA: Interfaz Accion
+ *
+ * PROPÓSITO:
+ * Esta clase se encarga de la lógica final para procesar el pago de un cliente.
+ * Esto incluye:
+ * 
+ * 1. Validar que exista una sesión activa y un usuario autenticado.
+ * 
+ * 2. Validar que el carrito no esté vacío y que la instancia de BaseDatos esté disponible.
+ * 
+ * 3. Obtener y validar el importe final confirmado (que debería enviarse desde pago.jsp).
+ * 
+ * 4. Crear un nuevo objeto Pedido con la información del usuario y el importe.
+ * 
+ * 5. Guardar el nuevo Pedido en la base de datos a través de BaseDatos (que usa PedidosDAO).
+ * 
+ * 6. Vaciar el carrito de la compra del usuario en la sesión.
+ * 
+ * 7. Preparar un mensaje de éxito o error para mostrar en la página de pago (pago.jsp).
+ * 
+ * 8. Devolver la ruta a pago.jsp para que el AppController realice un forward.
+ *
+ * Es invocada por el AppController cuando el parámetro "accion" es "procesarPago",
+ * típicamente desde un formulario de confirmación en pago.jsp.
+ */
+public class AccionProcesarPago implements Accion 
+{
+     /**
+     * ------------------------------------------------------------------------
+     * MÉTODO ejecutar (Implementación de la interfaz Accion)
+     * ------------------------------------------------------------------------
+     * Contiene la lógica principal para el procesamiento del pago y la creación del pedido.
+     */
     @Override
-    public String ejecutar(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(false);
-        float importeConfirmado = 0f;
+    public String ejecutar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    {
+         System.out.println("AccionProcesarPago: Iniciando procesamiento del pago."); // Log para depuración
 
-        if (session == null) {
+        // --- 1. OBTENCIÓN DE OBJETOS DE SESIÓN Y VALIDACIONES INICIALES ---
+
+        HttpSession session = request.getSession(false); // No crear nueva sesión si no existe.
+        float importeConfirmado = 0f; // Inicializar el importe que se confirmará.
+
+        // Si no hay sesión, el usuario no debería estar aquí. Redirigir al login.
+        if (session == null) 
+        {
+            System.out.println("AccionProcesarPago: No hay sesión activa.");
+
             request.setAttribute("error", "Su sesión ha expirado. Por favor, inicie sesión nuevamente.");
-            return "/login.jsp"; // O /WEB-INF/jsp/login.jsp
+            return "/login.jsp"; // O la ruta configurada a tu login.jsp
         }
 
+        // Obtener el usuario autenticado, el carrito y la instancia de BaseDatos de la sesión.
         Usuario usuarioAutenticado = (Usuario) session.getAttribute("usuarioAutenticado");
         Carrito carrito = (Carrito) session.getAttribute("carrito");
         BaseDatos bd = (BaseDatos) session.getAttribute("bd");
 
-        if (usuarioAutenticado == null) {
+        // Validar que el usuario esté autenticado.
+        if (usuarioAutenticado == null) 
+        {
+            System.out.println("AccionProcesarPago: Usuario no autenticado.");
+
             request.setAttribute("error", "Debe iniciar sesión para completar el pago.");
             return "/login.jsp";
         }
-        if (carrito == null || carrito.isVacio()) {
+
+        // Validar que el carrito exista y no esté vacío.
+        if (carrito == null || carrito.isVacio()) 
+        {
+            System.out.println("AccionProcesarPago: Carrito nulo o vacío.");
             request.setAttribute("mensaje", "Su carrito está vacío. No se puede procesar el pago.");
-            return "/WEB-INF/jsp/verCarrito.jsp"; // O a index
-        }
-        if (bd == null) {
-            System.err.println("AccionProcesarPago: BaseDatos no encontrada en sesión.");
-            request.setAttribute("error", "Error interno del sistema (BD no disponible).");
-            request.setAttribute("importeFinal", carrito.getTotalGeneral());
-            return "/WEB-INF/jsp/pago.jsp";
+
+            // Si el carrito es null, se crea uno vacío para que el JSP no falle al intentar acceder a sus propiedades.
+            request.setAttribute("carrito", carrito != null ? carrito : new Carrito());
+
+            return "/verCarrito.jsp"; // O a index
         }
 
+        // Validar que la instancia de BaseDatos esté disponible en sesión.
+        if (bd == null) 
+        {
+            System.err.println("AccionProcesarPago: BaseDatos no encontrada en sesión.");
+
+            request.setAttribute("error", "Error interno del sistema (BD no disponible).");
+            
+            // Intentar pasar el importe actual del carrito para mostrarlo en la página de pago con el error.
+            importeConfirmado = carrito.getTotalGeneral();
+
+            request.setAttribute("importeFinal", importeConfirmado);
+            
+            return "/pago.jsp";
+        }
+
+        // --- 2. OBTENCIÓN Y VALIDACIÓN DEL IMPORTE CONFIRMADO ---
+        // Se espera que pago.jsp envíe el importe final como un parámetro llamado "importeFinalConfirmado".
+        // Esto es una medida de confirmación, aunque el total real se recalculará o se usará el del carrito.
         String importeFinalStr = request.getParameter("importeFinalConfirmado");
-        try {
-            if (importeFinalStr != null) {
+        
+        try 
+        {
+            if (importeFinalStr != null) 
+            {
                 importeConfirmado = Float.parseFloat(importeFinalStr);
-                if (Math.abs(importeConfirmado - carrito.getTotalGeneral()) > 0.01) {
-                    throw new NumberFormatException("Discrepancia de importe.");
+
+                System.out.println("AccionProcesarPago: Importe confirmado recibido: " + importeConfirmado);
+
+                // Validación CRUCIAL: Comparar el importe recibido con el total real del carrito en sesión.
+                // Esto evita que un usuario malintencionado modifique el importe en el formulario.
+                // Se usa una pequeña tolerancia para comparaciones de tipo float.
+                if (Math.abs(importeConfirmado - carrito.getTotalGeneral()) > 0.01) 
+                {
+                    System.err.println("AccionProcesarPago: ¡ALERTA DE SEGURIDAD! Discrepancia de importe. Recibido: " +
+                                       importeConfirmado + ", Calculado del carrito: " + carrito.getTotalGeneral());
+
+                    throw new NumberFormatException("Discrepancia de importe. La operación no puede continuar.");
                 }
-            } else {
-                 throw new NumberFormatException("Importe final no proporcionado.");
+            } 
+            else 
+            {
+                System.err.println("AccionProcesarPago: Parámetro 'importeFinalConfirmado' no recibido o vacío.");
+
+                throw new NumberFormatException("Importe final no proporcionado por el cliente.");
             }
 
+             // --- 3. CREACIÓN Y PERSISTENCIA DEL PEDIDO ---
+            // Crear un nuevo objeto Pedido.
+            // Se usa el constructor de Pedido que toma (usuarioId, importeTotal)
+            // y luego se establece la fecha si Pedido es un JavaBean con setFechaPedido.
             Pedido nuevoPedido = new Pedido(usuarioAutenticado.getId(), importeConfirmado);
             nuevoPedido.setFechaPedido(new Timestamp(System.currentTimeMillis()));
             
-            bd.agregarPedido(nuevoPedido);
+            System.out.println("AccionProcesarPago: Intentando agregar pedido a la BD.");
+            bd.agregarPedido(nuevoPedido); // Llamar al método de BaseDatos que usa PedidosDAO.
+            System.out.println("AccionProcesarPago: Pedido agregado a la BD con éxito.");
             
-            carrito.vaciarCarrito();
-            session.setAttribute("carrito", carrito); // Guardar carrito vacío
+              
+            // --- 4. LIMPIEZA DEL CARRITO ---
 
-            request.setAttribute("mensajeExito", "¡Gracias! Su pedido ha sido procesado.");
-        } catch (NumberFormatException e) {
+            // Después de que el pedido se ha guardado exitosamente en la BD.
+
+            carrito.vaciarCarrito(); // Llamar al método del JavaBean Carrito.
+
+            // Volver a guardar el carrito (ahora vacío) en la sesión.
+            session.setAttribute("carrito", carrito); 
+            System.out.println("AccionProcesarPago: Carrito vaciado de la sesión.");
+
+            // Establecer un mensaje de éxito para mostrar en pago.jsp.
+            request.setAttribute("mensajeExito", "¡Gracias! Su pedido ha sido procesado con éxito.");
+        } 
+        catch (NumberFormatException e) 
+        {
+            // Error si el importeFinalStr no es un float válido o si hay discrepancia.
+            System.err.println("AccionProcesarPago: NumberFormatException - " + e.getMessage());
             e.printStackTrace();
+
             request.setAttribute("error", "Error con el importe del pago: " + e.getMessage());
-        } catch (SQLException e) {
+
+            // Si hubo error al parsear, es posible que importeConfirmado siga siendo 0.
+            // Es mejor mostrar el total real del carrito si está disponible.
+            if (carrito != null) importeConfirmado = carrito.getTotalGeneral();
+        } 
+        catch (SQLException e) 
+        {
+            // Error si falla la inserción en la base de datos.
+            System.err.println("AccionProcesarPago: SQLException - " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Error de base de datos al guardar el pedido: " + e.getMessage());
+            request.setAttribute("error", "Error de base de datos al guardar su pedido: " + e.getMessage());
+
+            // El importeConfirmado (si se parseó bien) se mantiene para mostrarlo.
+            // Si el parseo falló antes, importeConfirmado podría ser 0.
+            if (carrito != null && importeConfirmado == 0f) importeConfirmado = carrito.getTotalGeneral();
         }
         
+        // --- 5. PREPARAR DATOS PARA LA VISTA FINAL Y DEVOLVER RUTA ---
+
+        // Siempre pasar el importeConfirmado (o el calculado del carrito si hubo error antes)
+        // al JSP para que se muestre, incluso si hubo un error.
         request.setAttribute("importeFinal", importeConfirmado); // Siempre pasar el importe
+
+         System.out.println("AccionProcesarPago: Haciendo forward a /pago.jsp");
+         
+        // Devolver la ruta a pago.jsp. Esta página mostrará el mensaje de éxito o error.
         return "/pago.jsp"; // Siempre ir a pago.jsp para mostrar resultado
     }
 }
