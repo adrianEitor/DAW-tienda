@@ -13,18 +13,21 @@ public class CalcularPagoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
+
         float totalAPagar = 0.0f;
 
-        if (session != null) {
-            @SuppressWarnings("unchecked")
-            List<CD> carrito = (List<CD>) session.getAttribute("carrito");
+        Carrito carrito = null;
 
-            if (carrito != null) {
-                for (CD cd : carrito) {
-                    totalAPagar += cd.getImporte();
-                }
-            }
+        if (session != null) {
+            
+            carrito = (Carrito) session.getAttribute("carrito");
+
+            if (carrito != null && !carrito.isVacio())
+            {   
+                totalAPagar = carrito.getTotalGeneral();
+            } 
         }
+
         request.setAttribute("importeFinal", totalAPagar);
 
         // Reenviar al JSP de pago

@@ -16,27 +16,24 @@ public class VerCarritoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false); // No crear nueva sesión si no existe
-        List<CD> carrito = null;
-        float totalGeneral = 0.0f;
+        
+        Carrito carrito = null;
 
         if (session != null) {
-            // El warning de unchecked se puede suprimir con @SuppressWarnings("unchecked")
-            // si estás seguro del tipo.
-            @SuppressWarnings("unchecked")
-            List<CD> carritoEnSesion = (List<CD>) session.getAttribute("carrito");
-            carrito = carritoEnSesion; // Asignar incluso si es null
+        
+            carrito = (Carrito) session.getAttribute("carrito");
         }
 
-        if (carrito != null && !carrito.isEmpty()) {
-            for (CD cd : carrito) {
-                totalGeneral += cd.getImporte();
-            }
+        if (carrito == null) {
+            carrito = new Carrito();
         }
 
         // Poner los datos en el request para que el JSP pueda acceder a ellos
         request.setAttribute("carrito", carrito); // Puede ser null o vacío
-        request.setAttribute("totalGeneral", totalGeneral);
 
+        // El cálculo del total general ya no se hace aquí,
+        // se accede a través de ${carrito.totalGeneral} en el JSP.
+        
         // Reenviar la petición al JSP para que muestre los datos
         RequestDispatcher dispatcher = request.getRequestDispatcher("/verCarrito.jsp");
         dispatcher.forward(request, response);

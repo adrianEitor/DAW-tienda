@@ -1,0 +1,8 @@
+# Ignorar TODOS los archivos .class
+*.class
+
+# Ignorar específicamente los .class dentro de WEB-INF/classes/
+tienda/WEB-INF/classes/*.class
+
+# Ignorar configuración de VSCode
+.vscode/

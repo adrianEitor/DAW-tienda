@@ -2,7 +2,6 @@
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.util.*;
 
 public class EliminarCDServlet extends HttpServlet {
     
@@ -11,22 +10,23 @@ public class EliminarCDServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         if (session != null) {
-            List<CD> carrito = (List<CD>) session.getAttribute("carrito");
+
+            Carrito carrito = (Carrito) session.getAttribute("carrito");
+
             if (carrito != null) {
                 try {
                     int index = Integer.parseInt(request.getParameter("index"));
-                    if (index >= 0 && index < carrito.size()) {
-                        CD cd = carrito.get(index);
-                        cd.setCantidad(cd.getCantidad()-1);
-                        if(cd.getCantidad() == 0){
-                            carrito.remove(index);
-                        }
-                    }
+                    
+                    carrito.eliminarItem(index);
+
+                    session.setAttribute("carrito", carrito);
+
                 } catch (NumberFormatException e) {
                     // Ignore invalid index
                 }
             }
         }
-        response.sendRedirect("VerCarritoServlet");
+        
+        response.sendRedirect(request.getContextPath() + "/VerCarritoServlet");
     }
 }

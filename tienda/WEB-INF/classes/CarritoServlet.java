@@ -12,9 +12,9 @@ public class CarritoServlet extends HttpServlet {
         HttpSession session = request.getSession(true);
         
         // Obtener o crear el carrito en la sesión
-        List<CD> carrito = (List<CD>) session.getAttribute("carrito");
+        Carrito carrito = (Carrito) session.getAttribute("carrito");
         if (carrito == null) {
-            carrito = new ArrayList<CD>();
+            carrito = new Carrito(); // Se usa el constructor por defecto
             session.setAttribute("carrito", carrito);
         }
         
@@ -38,10 +38,21 @@ public class CarritoServlet extends HttpServlet {
             String precioStr = tokenizer.nextToken().trim().replace("$", "").trim();
             
             try {
+
                 float precio = Float.parseFloat(precioStr);
+
                 // Agregar al carrito
-                CD cd = new CD(titulo, artista, pais, precio, cantidad);
-                carrito.add(cd);
+                // Crear CD usando constructor por defecto y setters
+
+                    CD nuevoCd = new CD(); // Constructor por defecto
+
+                    nuevoCd.setTitulo(titulo);
+                    nuevoCd.setArtista(artista);
+                    nuevoCd.setPais(pais);
+                    nuevoCd.setPrecio(precio);
+                    nuevoCd.setCantidad(cantidad);
+                    
+                    carrito.agregarItem(nuevoCd);
             } catch (NumberFormatException e) {
                 // Manejar error en el formato del precio
                 System.err.println("Error al parsear el precio: " + precioStr);
@@ -49,6 +60,6 @@ public class CarritoServlet extends HttpServlet {
         }
         
         // Redirigir a outro servlet:
-        response.sendRedirect("VerCarritoServlet");
+        response.sendRedirect(request.getContextPath() + "/VerCarritoServlet");
     }
 }
