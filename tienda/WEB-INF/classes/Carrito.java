@@ -9,7 +9,7 @@ public class Carrito implements Serializable {
 
     private List<CD> items;
 
-    // NO HAY CONSTRUCTOR EXPLÍCITO
+    // NO HAY CONSTRUCTOR EXPLICITO
 
     // Getters y Setters
     public List<CD> getItems() {

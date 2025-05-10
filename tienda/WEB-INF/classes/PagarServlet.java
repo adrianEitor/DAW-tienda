@@ -32,6 +32,6 @@ public class PagarServlet extends HttpServlet {
                 request.setAttribute("error", "Error de base de datos. Intenta nuevamente.");
                 request.getRequestDispatcher("pago.jsp").forward(request, response);
             }
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
 }
