@@ -67,7 +67,7 @@ public class AccionAgregarAlCarrito implements Accion
             session.setAttribute("carrito", carrito);
         }
         
-        // --- 2. OBTENCIÓN DE PARÁMETROS DE LA PETICIÓN ---
+        // --- 2. OBTENCION DE PARAMETROS DE LA PETICION ---
 
         // Obtener la cadena que representa el CD seleccionado del formulario (del <select name="cd">).
         String cdSeleccionado = request.getParameter("cd");

@@ -36,7 +36,7 @@ public class AccionRegistro implements Accion
         
         System.out.println("AccionRegistro: Iniciando proceso de registro."); // Log para depuración
 
-        // --- 1. OBTENCIÓN DE PARÁMETROS DEL FORMULARIO DE REGISTRO ---
+        // --- 1. OBTENCIÓN DE PARAMETROS DEL FORMULARIO DE REGISTRO ---
 
         // Se leen los parámetros enviados desde el formulario en registro.jsp (o login.jsp si está combinado).
         // Se asume que los campos del formulario tienen los names: "nombre_reg", "email_reg", "password_reg", "tarjeta_reg".
@@ -54,7 +54,7 @@ public class AccionRegistro implements Accion
         BaseDatos bd = (BaseDatos) session.getAttribute("bd");
         String vistaDestino; // Variable para la ruta del JSP al que se hará forward.
 
-         // --- 3. VALIDACIÓN BÁSICA DE LOS DATOS DE ENTRADA ---
+         // --- 3. VALIDACIÓN BASICA DE LOS DATOS DE ENTRADA ---
         // Comprobar que los campos obligatorios (nombre, email, contraseña) no estén vacíos.
         // Se pueden añadir validaciones más complejas (formato de email, fortaleza de contraseña, etc.).
         if (nombre == null || nombre.trim().isEmpty() ||
@@ -115,7 +115,7 @@ public class AccionRegistro implements Accion
             if ( e.getMessage().toLowerCase().contains("unique constraint") || e.getMessage().toLowerCase().contains("duplicate key") ||
                                            e.getMessage().toLowerCase().contains("ya existe la llave") ) 
             {
-                // ESTABLECER ATRIBUTO DE ERROR ESPECÍFICO PARA REGISTRO
+                // ESTABLECER ATRIBUTO DE ERROR ESPECIFICO PARA REGISTRO
                  request.setAttribute("errorRegistro", "El email '" + email + "' ya está registrado. Por favor, use otro email o inicie sesión.");
             }
             else 

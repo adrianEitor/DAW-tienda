@@ -131,7 +131,7 @@ public class AppController extends HttpServlet
             case "registro": // Desde el formulario de registro (está en login.jsp)
                 accionEjecutar = new AccionRegistro();
                 break;
-            // case "logout": // Lo omitimos por ahora según tu petición
+            // case "logout": // Lo omitimos por ahora
             //    accionEjecutar = new AccionLogout();
             //    break;
             case "verindex": // Acción por defecto para mostrar la página de inicio.

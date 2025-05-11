@@ -1,0 +1,12 @@
+<Context>
+  <Resource name="jdbc/tienda"
+            auth="Container"
+            type="javax.sql.DataSource"
+            maxTotal="20"
+            maxIdle="10"
+            maxWaitMillis="-1"
+            username="postgres"
+            password="usuario"
+            driverClassName="org.postgresql.Driver"
+            url="jdbc:postgresql://localhost:5432/tienda"/>
+</Context>

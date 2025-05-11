@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * Es conceptualmente similar al método `gotoPage()` que se muestra en tus
  * diapositivas como parte de un patrón Dispatcher.
  *
- * CARACTERÍSTICAS DE UNA CLASE DE UTILIDAD:
+ * CARACTERISTICAS DE UNA CLASE DE UTILIDAD:
  * - Generalmente contiene solo métodos estáticos.
  * - A menudo tiene un constructor privado para prevenir su instanciación, ya que
  *   no tiene sentido crear objetos de una clase que solo ofrece métodos estáticos.
@@ -37,7 +37,7 @@ public class NavegadorVistas
         // Este constructor está vacío y es privado para reforzar el patrón de clase de utilidad. 
     }
 
-    // --- MÉTODO ESTÁTICO PARA HACER FORWARD ---
+    // --- MÉTODO ESTATICO PARA HACER FORWARD ---
     /**
      * ------------------------------------------------------------------------
      * MÉTODO irAPagina (Análogo a gotoPage)

@@ -4,15 +4,8 @@ import java.util.List;
 
 public class UsuariosDAO {
 
-    private Connection conexion;  // Atributo para almacenar la conexión
-
-    // Constructor que recibe una instancia de Connection
-    public UsuariosDAO(Connection conexion) {
-        this.conexion = conexion;  // Asignamos la conexión al atributo
-    }
-
     // Método para agregar un usuario
-    public void agregarUsuario(Usuario usuario) throws SQLException {
+    public void agregarUsuario(Usuario usuario, Connection conexion) throws SQLException {
         String sql = "INSERT INTO usuarios (email, password, nombre, numero_tarjeta) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) { // Usamos la conexión pasada en el constructor
             stmt.setString(1, usuario.getEmail());
@@ -24,7 +17,7 @@ public class UsuariosDAO {
     }
 
     // Método para obtener un usuario por email
-    public Usuario obtenerUsuarioPorEmail(String email) throws SQLException {
+    public Usuario obtenerUsuarioPorEmail(String email, Connection conexion) throws SQLException {
         String sql = "SELECT * FROM usuarios WHERE email = ?";
         try (PreparedStatement stmt = conexion.prepareStatement(sql)) { // Usamos la conexión pasada en el constructor
             stmt.setString(1, email);
@@ -43,7 +36,7 @@ public class UsuariosDAO {
     }
 
     // Método para listar todos los usuarios
-    public List<Usuario> listarUsuarios() throws SQLException {
+    public List<Usuario> listarUsuarios(Connection conexion) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM usuarios";
         try (Statement stmt = conexion.createStatement();

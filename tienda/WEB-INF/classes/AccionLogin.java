@@ -36,7 +36,7 @@ public class AccionLogin implements Accion
         
          System.out.println("AccionLogin: Iniciando proceso de login."); // Log para depuración
 
-        // --- 1. OBTENCIÓN DE PARÁMETROS DE LA PETICIÓN ---
+        // --- 1. OBTENCIÓN DE PARAMETROS DE LA PETICIÓN ---
 
         // Obtener el email y la contraseña enviados desde el formulario de login.
         // Se espera que el formulario en login.jsp use name="email_login" y name="password_login".
@@ -59,7 +59,7 @@ public class AccionLogin implements Accion
         // Variable para almacenar la ruta del JSP al que se hará forward en caso de error.
         String vistaDestino;
 
-        // --- 4. VALIDACIÓN BÁSICA DE ENTRADA ---
+        // --- 4. VALIDACIÓN BASICA DE ENTRADA ---
 
         // Verificar si los campos de email o contraseña están vacíos.
         if (email == null || email.trim().isEmpty() || password == null || password.isEmpty())

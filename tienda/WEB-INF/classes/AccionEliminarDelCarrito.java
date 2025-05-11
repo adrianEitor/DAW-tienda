@@ -100,7 +100,7 @@ public class AccionEliminarDelCarrito implements Accion
                     catch (NumberFormatException e) 
                     {
                         // Si indexStr no es un número válido.
-                        System.err.println("AccionEliminarDelCarrito: Índice inválido: " + indexStr);
+                        System.err.println("AccionEliminarDelCarrito: índice inválido: " + indexStr);
 
                         // Se podría guardar un mensaje de error en el request si se hiciera forward,
                         // pero como hacemos redirect, el mensaje se perdería.

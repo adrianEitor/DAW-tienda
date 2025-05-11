@@ -1,50 +1,58 @@
 import java.sql.*;
 import java.util.List;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 
 public class BaseDatos {
-    private static final String URL = "jdbc:postgresql://localhost:5432/tienda";
-    private static final String USUARIO = "postgres";
-    private static final String PASSWORD = "usuario";
-
-    private Connection conexion;
+    private DataSource ds;
     private UsuariosDAO usuariosDAO;
     private PedidosDAO pedidosDAO;
 
     public BaseDatos() throws SQLException {
-        this.conexion = DriverManager.getConnection(URL, USUARIO, PASSWORD);
-        this.usuariosDAO = new UsuariosDAO(conexion);
-        this.pedidosDAO = new PedidosDAO(conexion);
+        try {
+            Context ctx = new InitialContext();
+            ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/tienda");
+        } catch (NamingException e) {
+            throw new RuntimeException("Error al obtener DataSource", e);
+        }
+        // Inicializar los DAOs
+        this.usuariosDAO = new UsuariosDAO();
+        this.pedidosDAO = new PedidosDAO();
     }
 
     // Métodos fachada de Usuarios
     public void agregarUsuario(Usuario usuario) throws SQLException {
-        usuariosDAO.agregarUsuario(usuario);
+        try (Connection conexion = ds.getConnection()){
+            usuariosDAO.agregarUsuario(usuario, conexion);
+        }
     }
 
     public Usuario obtenerUsuarioPorEmail(String email) throws SQLException {
-        return usuariosDAO.obtenerUsuarioPorEmail(email);
+        try (Connection conexion = ds.getConnection()){
+            return usuariosDAO.obtenerUsuarioPorEmail(email, conexion);
+        }
     }
 
     public List<Usuario> listarUsuarios() throws SQLException {
-        return usuariosDAO.listarUsuarios();
+        try (Connection conexion = ds.getConnection()){
+            return usuariosDAO.listarUsuarios(conexion);
+        }
     }
 
     // Métodos fachada de Pedidos
     public void agregarPedido(Pedido pedido) throws SQLException {
-        pedidosDAO.agregarPedido(pedido);
+        try (Connection conexion = ds.getConnection()){
+            pedidosDAO.agregarPedido(pedido, conexion);
+        }
     }
 
     public List<Pedido> obtenerPedidosPorUsuario(int usuarioId) throws SQLException {
-        return pedidosDAO.obtenerPedidosPorUsuario(usuarioId);
-    }
-
-    public void cerrar() {
-        try {
-            if (conexion != null && !conexion.isClosed()) {
-                conexion.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        try (Connection conexion = ds.getConnection()){
+            return pedidosDAO.obtenerPedidosPorUsuario(usuarioId, conexion);
+        }        
     }
 }
