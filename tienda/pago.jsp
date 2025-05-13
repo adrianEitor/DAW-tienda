@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <%-- TÍTULO CAMBIADO A REFLEJAR EL ESTADO --%>
     <title>Caja - Confirmar Pago</title>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/estilo.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/general.css">
     <style>
         .payment-image { width: 80px; height: auto; display: block; margin: 10px auto; }
         .center-text { text-align:center; } /* AÑADIDO PARA CONSISTENCIA */
@@ -16,6 +16,31 @@
         .total-amount { font-size:1.2em; color:green; } /* AÑADIDO */
         .error { color: red; } /* AÑADIDO */
         .exito { color: green; } /* AÑADIDO */
+        .boton {
+            padding: 10px;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc; 
+            background: #5cb85c; 
+            border-radius: 8px; /* Bordes más redondeados */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra más pronunciada */
+        }
+        .boton:hover {
+            background-color: #4cae4c; /* Color al pasar el mouse */
+        }   
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .boton:visited {
+            color: white;
+        }
+
+        .volver {
+            background: #007bff; 
+        }
+
     </style>
 </head>
 <body>
@@ -72,7 +97,7 @@
         </c:if>
         
          <%-- ENLACE PARA VOLVER A LA TIENDA --%>
-        <p style="margin-top: 20px;"><a href="${pageContext.request.contextPath}/index.jsp">Volver a la Tienda</a></p>
+        <a href="${pageContext.request.contextPath}/index.jsp"><p class="boton volver">Volver a la Tienda</p></a>
 
         <%-- Logica futura de ver mis pedidos. --%>
         <%-- ENLACE OPCIONAL PARA VER PEDIDOS (si el usuario está autenticado y el pago fue exitoso) --%>

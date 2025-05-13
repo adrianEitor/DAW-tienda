@@ -7,12 +7,50 @@
     <head>
 	  <meta charset="UTF-8">
       <title>Música para DAA</title>
+	  <style>
+		body {
+    		font-family: Arial, sans-serif;
+		}
+		.boton {
+            padding: 10px;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc; 
+            background: #5cb85c; 
+            border-radius: 8px; /* Bordes más redondeados */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra más pronunciada */
+        }
+        .boton:hover {
+            background-color: #4cae4c; /* Color al pasar el mouse */
+        }   
+        a {
+			display: inline-block;
+            color: white;
+            text-decoration: none;
+			width: 6%;
+        }
+
+        .boton:visited {
+            color: white;
+        }
+	    .iniciar {
+            background: #007bff; 
+        }
+
+        .iniciar:hover {
+            background: #0056b3;
+        }
+
+		.iniciar-enlace {
+			width: 16%;
+		}
+	  </style>
     </head>
     <body bgcolor="#FDF5E6">
       <table align="center" border="0">
 		<tr> 
 		<th><IMG SRC="" ALIGN="CENTER"></th>
-		<th><font face="Times New Roman,Times" size="+3">Música para DAA</font></th>
+		<th><font size="+3">Música para DAA</font></th>
 		<th><IMG SRC="" ALIGN="CENTER"></th>
 		</tr>
       </table>
@@ -29,7 +67,7 @@
 					<p>Bienvenido desconocido</p>
 
 					<%-- ENLACES APUNTAN A JSP DIRECTAMENTE --%>
-                	<a href="${pageContext.request.contextPath}/login.jsp">Iniciar Sesión / Registrarse</a>
+                	<a class="iniciar-enlace" href="${pageContext.request.contextPath}/login.jsp"><p class="boton iniciar">Iniciar Sesión / Registrarse</p></a>
 				</c:otherwise>
 			</c:choose>
 
@@ -68,9 +106,7 @@
 
 		<%-- ENLACE PARA VER EL CARRITO --%>
         <%-- Apunta al AppController con la acción verCarrito. --%>
-        <p><a href="${pageContext.request.contextPath}/app?accion=verCarrito">Ver Carrito</a></p>
-		
-		<%-- POSIBLE MEJORA: Lógica para "Ver Mis Pedidos" si el usuario está autenticado --%>
+        <a href="${pageContext.request.contextPath}/app?accion=verCarrito"><p class="boton">Ver Carrito</p></a>
 
 		</center>
 	  <hr>

@@ -8,9 +8,8 @@
     <meta charset="UTF-8">
     <title>Iniciar Sesión o Registrarse</title>
     <%-- ENLACE A TU CSS EXTERNO SI LO TIENES --%>
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/estilo.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/general.css">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #FDF5E6; margin-top: 20px; }
         .container { 
             width: 350px; /* Un poco más de ancho */
             margin: 30px auto; 
@@ -59,7 +58,6 @@
         .error { color: #D8000C; background-color: #FFD2D2; padding:10px; border-radius:4px; margin-bottom: 15px; text-align:center; }
         .exito { color: #4F8A10; background-color: #DFF2BF; padding:10px; border-radius:4px; margin-bottom: 15px; text-align:center; }
         
-        h2, h3 { text-align: center; color: #333; margin-bottom:20px; }
         hr { margin-top: 25px; margin-bottom: 25px; border: 0; border-top: 1px solid #eee; }
         .link-container { text-align:center; margin-top:20px; }
         .link-container a { color: #007bff; text-decoration:none; }
