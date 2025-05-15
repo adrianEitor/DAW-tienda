@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * ============================================================================
  * CLASE AccionProcesarPago
@@ -52,6 +55,8 @@ public class AccionProcesarPago implements Accion
 
         HttpSession session = request.getSession(false); // No crear nueva sesión si no existe.
         float importeConfirmado = 0f; // Inicializar el importe que se confirmará.
+
+        List<CD> itemsComprados = null;
 
         // Si no hay sesión, el usuario no debería estar aquí. Redirigir al login.
         if (session == null) 
@@ -144,6 +149,15 @@ public class AccionProcesarPago implements Accion
             System.out.println("AccionProcesarPago: Intentando agregar pedido a la BD.");
             bd.agregarPedido(nuevoPedido); // Llamar al método de BaseDatos que usa PedidosDAO.
             System.out.println("AccionProcesarPago: Pedido agregado a la BD con éxito.");
+
+            // === CAMBIO PARA GUARDAR ITEMS DEL PEDIDO PARA EL INFORME ===
+            if (carrito.getItems() != null) 
+            {
+                // Crear una nueva lista que contenga los mismos objetos CD (copia superficial)
+                itemsComprados = new ArrayList<>(carrito.getItems());
+                System.out.println("AccionProcesarPago: Items del pedido copiados para el resumen: " + itemsComprados.size() + " items.");
+            }
+            // === FIN CAMBIO PARA GUARDAR ITEMS DEL PEDIDO PARA EL INFORME ===
             
               
             // --- 4. LIMPIEZA DEL CARRITO ---
@@ -158,6 +172,14 @@ public class AccionProcesarPago implements Accion
 
             // Establecer un mensaje de éxito para mostrar en pago.jsp.
             request.setAttribute("mensajeExito", "¡Gracias! Su pedido ha sido procesado con éxito.");
+
+            // === PASAR ITEMS COMPRADOS AL JSP ===
+            if (itemsComprados != null)
+            {
+                request.setAttribute("itemsDelPedido", itemsComprados);
+            }
+            // === FIN PARA PASAR ITEMS COMPRADOS AL JSP ===
+
         } 
         catch (NumberFormatException e) 
         {
