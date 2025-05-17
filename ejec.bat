@@ -13,8 +13,11 @@ echo Compilando archivos .java...
 REM Comillas adicionales alrededor de cada ruta para asegurar que las rutas con espacios se manejen correctamente
 javac -cp "%LIB%" "%JAVA_SRC%"\*.java
 
-echo Copiando carpeta 'tienda' al directorio actual (%DEST_DIR%)...
-xcopy /E /I /Y "%TIENDA_FOLDER%" "%DEST_DIR%\tienda"
+echo.
+echo Empaquetando 'tienda' como WAR en %DEST_DIR%...
+
+REM Crea tienda.war en DEST_DIR, tomando toda la estructura de TIENDA_FOLDER
+jar -cvf "%DEST_DIR%\adrian_eitor_guillermo_arcos.war" -C "%TIENDA_FOLDER%" .
 
 echo.
 echo Proceso completado con éxito.
