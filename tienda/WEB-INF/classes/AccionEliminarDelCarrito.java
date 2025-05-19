@@ -22,7 +22,7 @@ public class AccionEliminarDelCarrito implements Accion
 
         // Intenta obtener la sesión HTTP existente. request.getSession(false) devuelve
         // null si no hay una sesión activa para el cliente; no crea una nueva.
-        // Esto es apropiado porque si no hay sesión, no debería haber un carrito que modificar.
+        // Si no hay sesión, no debería haber un carrito que modificar.
         HttpSession session = request.getSession(false);
         
         // Solo proceder si existe una sesión.
@@ -40,7 +40,6 @@ public class AccionEliminarDelCarrito implements Accion
 
                 // Obtener el parámetro index de la URL de la petición.
                 // Este index indica la posición del CD a eliminar en la lista de ítems del carrito.
-                // Ejemplo de URL: /app?accion=eliminarCD&index=0
                 String indexStr = request.getParameter("index");
 
                 // Solo proceder si se proporcionó el parámetro index.
@@ -54,19 +53,12 @@ public class AccionEliminarDelCarrito implements Accion
                         // Llamar al método eliminarItem del objeto Carrito
                         // para realizar la lógica de eliminación o decremento de cantidad.
                         carrito.eliminarItem(index);
-
-                        // Volver a guardar el objeto carrito en la sesión.
-                        // session.setAttribute("carrito", carrito);
-                        // Aunque el objeto carrito obtenido de la sesión es modificado por referencia
-                        // (su lista interna de 'items' cambia).
                     } 
                     catch (NumberFormatException e) 
                     {
                         // Si indexStr no es un número válido.
                         System.err.println("AccionEliminarDelCarrito: índice inválido: " + indexStr);
 
-                        // Se podría guardar un mensaje de error en el request si se hiciera forward,
-                        // pero como hacemos redirect, el mensaje se perdería.
                         // La redirección a verCarrito simplemente mostrará el carrito sin cambios
                         // si el índice fue inválido y no se pudo procesar la eliminación.
                         request.setAttribute("errorCarrito", "No se pudo eliminar el ítem, índice inválido.");
@@ -86,20 +78,14 @@ public class AccionEliminarDelCarrito implements Accion
         else 
         {
             System.out.println("AccionEliminarDelCarrito: No hay sesión activa. No se puede eliminar del carrito.");
-            // Si no hay sesión, no hay carrito que modificar. La redirección simplemente mostrará
-            // un carrito vacío o la página de inicio si verCarrito lo maneja así.
         }
 
          // --- 2. REDIRECCIÓN ---
 
         // Después de intentar la eliminación (haya tenido éxito o no, o incluso si no había carrito),
         // SIEMPRE se redirige a la acción "verCarrito".
-        // Esto asegura que el usuario vea el estado más reciente del carrito.
-        // Sigue el patrón Post/Redirect/Get (aunque esta acción es GET, la redirección
-        // asegura una URL limpia y una recarga segura).
         response.sendRedirect(request.getContextPath() + "/app?accion=verCarrito");
 
-        // Se devuelve null porque la respuesta ya ha sido manejada por sendRedirect().
         // El AppController no necesita hacer un forward.
         return null; // Indica que la respuesta ya fue manejada
     }

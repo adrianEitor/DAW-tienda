@@ -26,13 +26,12 @@ public class AccionRegistro implements Accion
         // Se asume que los campos del formulario tienen los names: "nombre_reg", "email_reg", "password_reg", "tarjeta_reg".
         String nombre = request.getParameter("nombre_reg");
         String email = request.getParameter("email_reg");
-        String password = request.getParameter("password_reg"); // ¡IMPORTANTE: Considerar hashear esta contraseña antes de guardarla!
+        String password = request.getParameter("password_reg"); 
         String tarjetaCredito = request.getParameter("tarjeta_reg");
        
         // --- 2. GESTIÓN DE LA SESIÓN HTTP Y BaseDatos ---
 
         // Obtener la sesión HTTP actual. Si no existe, se crea una nueva (gracias a true).
-        // La sesión se usa para obtener/guardar la instancia de BaseDatos.
         HttpSession session = request.getSession(true);
 
         BaseDatos bd = (BaseDatos) session.getAttribute("bd");
@@ -40,7 +39,6 @@ public class AccionRegistro implements Accion
 
          // --- 3. VALIDACIÓN BASICA DE LOS DATOS DE ENTRADA ---
         // Comprobar que los campos obligatorios (nombre, email, contraseña) no estén vacíos.
-        // Se pueden añadir validaciones más complejas (formato de email, fortaleza de contraseña, etc.).
         if (nombre == null || nombre.trim().isEmpty() ||
             email == null || email.trim().isEmpty() ||
             password == null || password.isEmpty()) 
@@ -71,7 +69,7 @@ public class AccionRegistro implements Accion
             }
             
             // Crear un nuevo objeto Usuario utilizando el constructor que recibe los parámetros.
-            Usuario nuevoUsuario = new Usuario(email, password, nombre, tarjetaCredito); // Usa tu constructor
+            Usuario nuevoUsuario = new Usuario(email, password, nombre, tarjetaCredito); 
             
              System.out.println("AccionRegistro: Intentando agregar usuario a la BD: " + email);
 
@@ -95,7 +93,6 @@ public class AccionRegistro implements Accion
             e.printStackTrace(); // Imprimir la traza completa del error en la consola de Tomcat.
 
             // Comprobar si el error es debido a una violación de restricción única (ej. email duplicado).
-            // El mensaje exacto puede variar según el SGBD (PostgreSQL en tu caso).
             if ( e.getMessage().toLowerCase().contains("unique constraint") || e.getMessage().toLowerCase().contains("duplicate key") ||
                                            e.getMessage().toLowerCase().contains("ya existe la llave") ) 
             {

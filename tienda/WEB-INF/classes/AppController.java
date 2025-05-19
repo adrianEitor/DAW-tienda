@@ -11,41 +11,13 @@ import javax.servlet.http.HttpServletResponse;
  * EXTENDS: HttpServlet
  *
  * PROPÓSITO:
- * Esta clase actúa como un Front Controller, un patrón de diseño central en MVC2 y
- * arquitecturas como "Service to Worker". Su principal responsabilidad es ser el
+ * Esta clase actúa como un Front Controller. Su principal responsabilidad es ser el
  * punto de entrada único para la mayoría de las peticiones de la aplicación
  * que involucran lógica de negocio o navegación compleja.
  *
- * IMPLICACIONES DE USAR UN ÚNICO SERVLET (FRONT CONTROLLER):
- * 
- * 1.  Centralización del control: En lugar de tener múltiples servlets mapeados a
- *     diferentes URLs para cada funcionalidad (como tenías antes: CarritoServlet,
- *     LoginServlet, etc.), AppController recibe las peticiones y decide qué
- *     lógica específica ejecutar. Esto se hace típicamente a través de un parámetro
- *     en la petición (como `?accion=nombreDeLaAccion`).
- * 
- * 2.  Separación de responsabilidades:
- * 
- *     - El AppController se enfoca en el enrutamiento, la delegación y el manejo
- *       general de la petición/respuesta.
- * 
- *     - La lógica de negocio específica para cada acción se encapsula en clases
- *       separadas (tus clases Accion...java, que actúan como "Helpers" o "Services").
- * 
- * 3.  Mantenibilidad: añadir nuevas funcionalidades o modificar existentes
- *     generalmente implica crear/modificar una clase Accion y añadir un caso
- *     al switch (o a un mapa de acciones) en el AppController, en lugar de
- *     crear un nuevo servlet completo y su mapeo en web.xml.
- * 
- * 4.  Reusabilidad: tareas comunes a muchas peticiones
- *     (como comprobaciones de seguridad, logging, inicialización de recursos)
- *     pueden manejarse en un solo lugar dentro del AppController o en filtros
- *     que actúen antes de él.
- * 
- * 5.  Flujo de trabajo:
- * 
- *     a. El cliente (navegador) envía una petición a una URL mapeada a este AppController
- *        (ej., `/app?accion=verCarrito`).
+ * FUNCINAMIENTO:
+ *     a. El clientE envía una petición a una URL mapeada a este AppController
+ *        (ej., '/app?accion=verCarrito').
  * 
  *     b. AppController (a través de doGet/doPost que llaman a processRequest)
  *        extrae el parámetro "accion".
@@ -87,19 +59,18 @@ public class AppController extends HttpServlet
         // Si no se proporciona el parámetro accion, o está vacío, se establece una acción por defecto.
         if (accionParam == null || accionParam.trim().isEmpty()) 
         {
-            accionParam = "verIndex"; // Por ejemplo, mostrar la página de inicio.
+            accionParam = "verIndex"; 
         }
 
         System.out.println("AppController: Acción recibida -> " + accionParam); // Log para depuración
 
-        Accion accionEjecutar = null; // Variable para mantener la instancia de la acción a ejecutar.
-        String vistaDestino = null; // Variable para la ruta del JSP al que se hará forward.
+        Accion accionEjecutar = null; // Variable para mantener la instancia de la acción a ejecutsr
+        String vistaDestino = null; // Variable para la ruta del JSP al que se hará forward
 
         // --- 2. SELECCIÓN DE LA CLASE Accion (WORKER/HELPER) ---
 
         // Se utiliza un bloque switch para determinar qué clase Accion instanciar
         // basándose en el valor de accionParam.
-        // accionParam.toLowerCase() se usa para hacer la comparación insensible a mayúsculas/minúsculas.
         switch (accionParam.toLowerCase()) 
         {
             case "agregarcd": // Si la acción es "agregarcd" (enviada desde el formulario de index.jsp)
@@ -123,11 +94,8 @@ public class AppController extends HttpServlet
             case "registro": // Desde el formulario de registro (está en login.jsp)
                 accionEjecutar = new AccionRegistro();
                 break;
-            // case "logout": // Lo omitimos por ahora
-            //    accionEjecutar = new AccionLogout();
-            //    break;
             case "verindex": // Acción por defecto para mostrar la página de inicio.
-                vistaDestino = "/index.jsp"; // Asumiendo que está en la raíz de WebContent
+                vistaDestino = "/index.jsp"; 
                 break;
             default: // Si el valor de 'accion' no coincide con ninguno de los casos anteriores.
                 System.err.println("AppController: Acción desconocida - " + accionParam);
@@ -138,43 +106,35 @@ public class AppController extends HttpServlet
         // --- 3. EJECUCIÓN DE LA ACCIÓN Y DESPACHO A LA VISTA ---
         try
         {
-            // Si se encontró e instanció una clase Accion para el accionParam...
+            // Si se encontró e instanció una clase Accion para el accionParam
             if (accionEjecutar != null) 
             {
                 System.out.println("AppController: Ejecutando acción: " + accionEjecutar.getClass().getSimpleName());
 
-                // ...se llama a su método ejecutar().
+                // Se llama a su método ejecutar().
                 // Este método realizará la lógica de negocio y devolverá:
-                //  a) La ruta (String) al JSP al que se debe hacer forward.
-                //  b) null si la acción ya manejó la respuesta (ej., con response.sendRedirect()).
+                //   La ruta (String) al JSP al que se debe hacer forward.
+                //   o
+                //   null si la acción ya manejó la respuesta (ej., con response.sendRedirect()).
                 vistaDestino = accionEjecutar.ejecutar(request, response);
             }
 
             // Si vistaDestino no es null (lo que significa que la acción no hizo un sendRedirect
             // y quiere que se haga un forward a un JSP) Y si la respuesta no ha sido "committed"
-            // (es decir, si sendRedirect o escritura directa al response no ha ocurrido aún)...
+            // (es decir, si sendRedirect o escritura directa al response no ha ocurrido aún)
             if (vistaDestino != null && !response.isCommitted()) 
             {
                 System.out.println("AppController: Realizando forward a la vista: " + vistaDestino);
 
-                // ...se utiliza la clase de utilidad `NavegadorVistas` para realizar el forward.
+                // Se utiliza la clase de utilidad 'NavegadorVistas' para realizar el forward.
                 NavegadorVistas.irAPagina(vistaDestino, request, response);
             }
             else if (vistaDestino == null && !response.isCommitted())
             {
-                 // Este caso es menos común: la acción devolvió null pero no hizo sendRedirect.
                  System.err.println("AppController: La acción devolvió null para vistaDestino, pero la respuesta no fue committed. Revise la lógica de la acción: " + (accionEjecutar != null ? accionEjecutar.getClass().getSimpleName() : "Acción directa a vista nula"));
-                 
-                // Considerar enviar a una página de error por defecto si esto no es esperado.
-                if (!response.isCommitted()) // Doble chequeo por si acaso
-                { 
-                    NavegadorVistas.irAPagina("/error.jsp", request, response); // O "/WEB-INF/jsp/error.jsp"
-                }
             } 
             else 
             {
-                // Si vistaDestino es null Y la respuesta ya fue committed (probablemente por un sendRedirect en la Accion)
-                // O si la acción era una que establecía vistaDestino directamente (como verIndex) y response.isCommitted() es true (raro aquí).
                 System.out.println("AppController: La respuesta ya fue committed por la acción (ej. sendRedirect) o la acción no requiere forward.");
             }
 
@@ -185,12 +145,6 @@ public class AppController extends HttpServlet
             System.err.println("AppController: EXCEPCIÓN CAPTURADA en processRequest: " + e.getMessage());
             e.printStackTrace(); // Loguear el error completo
             request.setAttribute("error", "Ocurrió un error inesperado en la aplicación: " + e.getMessage());
-
-             // Intentar hacer forward a una página de error, solo si la respuesta no ha sido enviada ya.
-            if (!response.isCommitted()) 
-            {
-                NavegadorVistas.irAPagina("/error.jsp", request, response);
-            }
         }
     }
 

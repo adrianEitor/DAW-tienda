@@ -21,8 +21,7 @@ public class AccionVerCarrito implements Accion
 
         // --- 1. OBTENCIÓN DE LA SESIÓN HTTP ---
 
-        // Intenta obtener la sesión HTTP existente. request.getSession(false) devuelve
-        // null si no hay una sesión activa; no crea una nueva.
+        // Intenta obtener la sesión HTTP existente. 
         HttpSession session = request.getSession(false);
 
         Carrito carrito = null; // Inicializa la referencia al objeto Carrito.
@@ -57,7 +56,7 @@ public class AccionVerCarrito implements Accion
         // o porque el atributo "carrito" no estaba en la sesión), se crea una nueva
         // instancia de Carrito (que estará vacía).
         // Esto asegura que la vista JSP siempre reciba un objeto Carrito válido
-        // y no tenga que lidiar con un valor null, simplificando la lógica en el JSP.
+        // y no tenga que tratar con un valor null, simplificando la lógica en el JSP
         if (carrito == null) 
         {
             System.out.println("AccionVerCarrito: Carrito es null, creando una nueva instancia vacía.");
@@ -68,13 +67,11 @@ public class AccionVerCarrito implements Accion
         // --- 4. PREPARACIÓN DE DATOS PARA LA VISTA (JSP) ---
         // Poner el objeto Carrito (ya sea el recuperado de la sesión o el nuevo y vacío)
         // como un atributo en el objeto request.
-        // El JSP verCarrito.jsp podrá acceder a este objeto usando EL: ${carrito}.
         request.setAttribute("carrito", carrito);
         
          // --- 5. DEVOLVER RUTA DE LA VISTA ---
         // Devolver la ruta al archivo JSP que mostrará el contenido del carrito.
         // El AppController usará esta cadena para realizar el RequestDispatcher.forward().
-        
         String vistaDestino = "/verCarrito.jsp"; 
         
         System.out.println("AccionVerCarrito: Devolviendo ruta a la vista: " + vistaDestino);

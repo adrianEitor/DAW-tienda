@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page session="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -79,17 +79,14 @@
         <%-- ======================================================================= --%>
         <%-- FORMULARIO DE INICIO DE SESIÓN                                            --%>
         <%-- ======================================================================= --%>
-        <%-- action: URL a la que se enviarán los datos del formulario.
-             Aquí, apunta al AppController (${pageContext.request.contextPath}/app).
+        <%-- action:  apunta al AppController.
              El AppController usará el parámetro accion para determinar qué hacer. --%>
-        <%-- method="post": Los datos del formulario se enviarán en el cuerpo de la petición HTTP,
-             lo cual es más seguro para credenciales que enviarlos en la URL (como haría GET). --%>
+        <%-- method="post": Los datos del formulario se enviarán en el cuerpo de la petición HTTP --%>
         <form action="${pageContext.request.contextPath}/app" method="post">
             
             <%-- CAMPO OCULTO accion:
-                 Este campo no es visible para el usuario, pero su valor ("login") se envía
-                 junto con los otros datos del formulario. El AppController leerá este
-                 parámetro para saber que esta petición específica es para la acción de login. --%>
+                 El AppController leerá este parámetro para saber que esta petición específica es
+                 para la acción de login. --%>
             <input type="hidden" name="accion" value="login">
 
             <div class="form-group">
@@ -117,9 +114,7 @@
             <p class="error">${errorRegistro}</p>
         </c:if>
 
-        <%-- ======================================================================= --%>
-        <%-- FORMULARIO DE REGISTRO                                                    --%>
-        <%-- ======================================================================= --%>
+        <%-- FORMULARIO DE REGISTRO --%>
         <%-- action: también apunta al AppController. --%>
         <form action="${pageContext.request.contextPath}/app" method="post">
             <%-- CAMPO OCULTO accion:

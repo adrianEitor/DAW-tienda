@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ page session="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -94,13 +94,6 @@
     <%-- LÓGICA DE PRESENTACIÓN DEL CARRITO USANDO JSTL y EL --%>
     <c:choose>
 
-         <%-- Condición <c:when>: Se ejecuta si el carrito NO está vacío.
-             EL (${not empty carrito}): Verifica si el atributo carrito (que es una instancia
-                                      de tu JavaBean Carrito, puesto en el request por
-                                      AccionVerCarrito) no es null.
-             EL (${not carrito.vacio}): Accede a la propiedad vacio del JavaBean Carrito
-                                      (invocando el método isVacio() o getVacio()).
-                                      La negación not verifica que el carrito NO esté vacío. --%>
         <c:when test="${not empty carrito && not carrito.vacio}">
             <div class="container">
                 <table class="center-table">
@@ -108,8 +101,8 @@
                         <tr>
                             <th>TÍTULO DEL CD</th>
                             <th>Cantidad</th>
-                            <th>Precio Unit.</th> <%-- TÍTULO DE COLUMNA MÁS CLARO --%>
-                            <th>Subtotal</th>    <%-- TÍTULO DE COLUMNA MÁS CLARO --%>
+                            <th>Precio Unit.</th> 
+                            <th>Subtotal</th>    
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -130,7 +123,6 @@
                                 <%-- ${cdItem.titulo} invoca cdItem.getTitulo() --%>
                                 <%-- ${cdItem.artista} invoca cdItem.getArtista() --%>
                                 <%-- ${cdItem.pais} invoca cdItem.getPais() --%>
-
                                 <td>${cdItem.titulo} | ${cdItem.artista} | ${cdItem.pais}</td>
                                 <td class="center-text">${cdItem.cantidad}</td> <%-- invoca cdItem.getCantidad() --%>
                                 
@@ -171,11 +163,11 @@
         </c:when>
         <c:otherwise>
             <p>El carrito está vacío.</p>
+            <br>
+            <div class="boton volver" style="text-align:center;">
+                <a href="${pageContext.request.contextPath}/index.jsp">Volver a la Página Principal</a>
+            </div>
         </c:otherwise>
     </c:choose>
-    <br>
-    <div class="boton volver" style="text-align:center;">
-        <a href="${pageContext.request.contextPath}/index.jsp">Volver a la Página Principal</a>
-    </div>
 </body>
 </html>

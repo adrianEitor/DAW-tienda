@@ -17,7 +17,7 @@ y el total pagado. Esto se muestra si sí hay un mensajeExito.
 --%>
 
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -205,15 +205,6 @@ y el total pagado. Esto se muestra si sí hay un mensajeExito.
                 </table>
                 <br>
             </c:if>
-            
-            <%-- El total pagado se muestra al principio junto con el mensaje de éxito/error --%>
-            <%-- Si quieres repetirlo aquí:
-            <p class="bold-text">TOTAL PAGADO:</p>
-            <p class="total-amount">
-                <fmt:formatNumber value="${importeFinal}" type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2"/>
-            </p>
-            --%>
-            <img src="${pageContext.request.contextPath}/images/cash_register.png" alt="Caja Registradora" class="payment-image"/>
         </c:if>
         
         <%-- ENLACE PARA VOLVER A LA TIENDA (siempre visible) --%>

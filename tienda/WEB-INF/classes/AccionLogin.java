@@ -23,21 +23,17 @@ public class AccionLogin implements Accion
         // --- 1. OBTENCIÓN DE PARAMETROS DE LA PETICIÓN ---
 
         // Obtener el email y la contraseña enviados desde el formulario de login.
-        // Se espera que el formulario en login.jsp use name="email_login" y name="password_login".
         String email = request.getParameter("email_login");
         String password = request.getParameter("password_login");
         
         // --- 2. GESTIÓN DE LA SESIÓN HTTP ---
 
         // Obtener la sesión HTTP actual. Si no existe, se crea una nueva (gracias a true).
-        // La sesión se usará para almacenar el objeto Usuario si el login es exitoso,
-        // y también para obtener/guardar la instancia de BaseDatos.
         HttpSession session = request.getSession(true);
 
         // --- 3. OBTENCIÓN DE LA INSTANCIA DE BaseDatos ---
 
         // Intenta obtener la instancia de BaseDatos que podría estar ya en sesión
-        // (por ejemplo, si el usuario ya interactuó con RegistroServlet).
         BaseDatos bd = (BaseDatos) session.getAttribute("bd");
         
         // Variable para almacenar la ruta del JSP al que se hará forward en caso de error.
@@ -57,7 +53,7 @@ public class AccionLogin implements Accion
             request.setAttribute("param_email_login", email); 
 
             // Devolver la ruta al JSP de login para que el AppController haga forward.
-            return "/login.jsp"; // Asegúrate que esta ruta es correcta.
+            return "/login.jsp"; 
         }
 
         // --- 5. LÓGICA DE AUTENTICACIÓN ---
@@ -84,10 +80,8 @@ public class AccionLogin implements Accion
                 System.out.println("AccionLogin: Login exitoso para el usuario: " + email);
 
                 // Guardar el objeto Usuario completo en la sesión.
-                // Esto permite acceder a la información del usuario (nombre, id, etc.) en otras partes de la aplicación.
-                session.setAttribute("usuarioAutenticado", usuario); // Guardar objeto Usuario completo
+                session.setAttribute("usuarioAutenticado", usuario); 
                 
-                // Opcional: Crear o asegurar que exista un objeto Carrito en sesión para este usuario.
                 Carrito carrito = (Carrito) session.getAttribute("carrito");
 
                 if (carrito == null) 
@@ -97,11 +91,10 @@ public class AccionLogin implements Accion
                     session.setAttribute("carrito", carrito);
                 }
 
-                // Redirigir al usuario a la página principal (o a la vista del carrito, o a donde sea apropiado).
-                // Usar sendRedirect sigue el patrón Post/Redirect/Get.
+                // Redirigir al usuario a la página principal.
                 response.sendRedirect(request.getContextPath() + "/index.jsp"); // O a /app?accion=verCarrito
                 
-                // Indicar al AppController que la respuesta ya fue manejada (sendRedirect).
+                // Indicar al AppController que la respuesta ya fue manejada.
                 return null; 
             } 
             else 

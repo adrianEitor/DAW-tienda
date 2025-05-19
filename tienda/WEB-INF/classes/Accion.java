@@ -63,9 +63,7 @@ public interface Accion
      * ------------------------------------------------------------------------
      * MÉTODO ejecutar
      * ------------------------------------------------------------------------
-     * Este es el único método definido por la interfaz Accion. Cada clase
-     * que implemente Accion deberá proporcionar una implementación concreta
-     * de este método.
+     * Este es el único método definido por la interfaz Accion.
      *
      * RESPONSABILIDADES DEL MÉTODO EN UNA CLASE CONCRETA:
      * 
@@ -82,7 +80,7 @@ public interface Accion
      * 3. Preparar datos para la Vista:
      * 
      *    - Colocar objetos o resultados en el request scope (request.setAttribute())
-     *      o en el session scope (`session.setAttribute()) para que el JSP
+     *      o en el session scope (session.setAttribute()) para que el JSP
      *      pueda acceder a ellos usando Expression Language (EL).
      * 
      * 4. Determinar el flujo de navegación:
@@ -94,13 +92,10 @@ public interface Accion
      *      la respuesta ya ha sido gestionada y no se necesita hacer forward.
      *
      * @param request  La HttpServletRequest que encapsula la información de la
-     *                 petición HTTP del cliente. Proporciona acceso a parámetros,
-     *                 cabeceras, la sesión, etc.
+     *                 petición HTTP del cliente. 
      *
      * @param response La HttpServletResponse que se utilizará para enviar la
-     *                 respuesta HTTP de vuelta al cliente. Permite establecer el
-     *                 tipo de contenido, cabeceras, y escribir datos en el cuerpo
-     *                 de la respuesta, o realizar redirecciones.
+     *                 respuesta HTTP de vuelta al cliente.
      *
      * @return Un String que representa la ruta al recurso (generalmente un archivo JSP)
      *         al que el AppController debe hacer forward. La ruta debe ser

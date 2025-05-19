@@ -14,7 +14,7 @@ public class Carrito implements Serializable {
     // Getters y Setters
     public List<CD> getItems() {
         if (this.items == null) {
-            this.items = new ArrayList<>(); // Inicialización diferida (Lazy initialization)
+            this.items = new ArrayList<>(); 
         }
         return items;
     }

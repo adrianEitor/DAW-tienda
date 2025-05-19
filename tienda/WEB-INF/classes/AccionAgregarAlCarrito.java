@@ -129,13 +129,7 @@ public class AccionAgregarAlCarrito implements Accion
         }
         
          // --- 5. REDIRECCIÓN ---
-        // Después de procesar la adición del CD (o intentar hacerlo),
-        // se realiza una redirección a otra acción del AppController.
-        // En este caso, se redirige a la acción "verCarrito".
-        // request.getContextPath() obtiene la ruta base de la aplicación (ej. "/tienda").
-        // Esto asegura que la URL de redirección sea correcta independientemente de cómo
-        // esté desplegada la aplicación.
-        // Esta redirección sigue el patrón Post/Redirect/Get (PRG), que ayuda a:
+        // Esta redirección ayuda a:
         //  a. Evitar que el usuario reenvíe el mismo formulario si recarga la página
         //     después de un POST exitoso (lo que podría añadir el mismo CD de nuevo).
         //  b. Mantener la URL del navegador limpia, mostrando la URL de la vista del carrito.

@@ -24,8 +24,8 @@ public class AccionProcesarPago implements Accion
 
         // --- 1. OBTENCIÓN DE OBJETOS DE SESIÓN Y VALIDACIONES INICIALES ---
 
-        HttpSession session = request.getSession(false); // No crear nueva sesión si no existe.
-        float importeConfirmado = 0f; // Inicializar el importe que se confirmará.
+        HttpSession session = request.getSession(false); 
+        float importeConfirmado = 0f; // Inicializar el importe 
 
         List<CD> itemsComprados = null;
 
@@ -80,8 +80,7 @@ public class AccionProcesarPago implements Accion
         }
 
         // --- 2. OBTENCIÓN Y VALIDACIÓN DEL IMPORTE CONFIRMADO ---
-        // Se espera que pago.jsp envíe el importe final como un parámetro llamado "importeFinalConfirmado".
-        // Esto es una medida de confirmación, aunque el total real se recalculará o se usará el del carrito.
+
         String importeFinalStr = request.getParameter("importeFinalConfirmado");
         
         try 
@@ -128,7 +127,7 @@ public class AccionProcesarPago implements Accion
                 itemsComprados = new ArrayList<>(carrito.getItems());
                 System.out.println("AccionProcesarPago: Items del pedido copiados para el resumen: " + itemsComprados.size() + " items.");
             }
-            // === FIN CAMBIO PARA GUARDAR ITEMS DEL PEDIDO PARA EL INFORME ===
+            // --- FIN CAMBIO PARA GUARDAR ITEMS DEL PEDIDO PARA EL INFORME ---
             
               
             // --- 4. LIMPIEZA DEL CARRITO ---
@@ -142,7 +141,7 @@ public class AccionProcesarPago implements Accion
             System.out.println("AccionProcesarPago: Carrito vaciado de la sesión.");
 
             // Establecer un mensaje de éxito para mostrar en pago.jsp.
-            request.setAttribute("mensajeExito", "¡Gracias! Su pedido ha sido procesado con éxito.");
+            request.setAttribute("mensajeExito", "Su pedido ha sido procesado correctamente.");
 
             // === PASAR ITEMS COMPRADOS AL JSP ===
             if (itemsComprados != null)
@@ -160,8 +159,6 @@ public class AccionProcesarPago implements Accion
 
             request.setAttribute("error", "Error con el importe del pago: " + e.getMessage());
 
-            // Si hubo error al parsear, es posible que importeConfirmado siga siendo 0.
-            // Es mejor mostrar el total real del carrito si está disponible.
             if (carrito != null) importeConfirmado = carrito.getTotalGeneral();
         } 
         catch (SQLException e) 
@@ -184,7 +181,6 @@ public class AccionProcesarPago implements Accion
 
          System.out.println("AccionProcesarPago: Haciendo forward a /pago.jsp");
          
-        // Devolver la ruta a pago.jsp. Esta página mostrará el mensaje de éxito o error.
         return "/pago.jsp"; // Siempre ir a pago.jsp para mostrar resultado
     }
 }
