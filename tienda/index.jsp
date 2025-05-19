@@ -17,8 +17,8 @@
             align-items: center;
             border: 1px solid #ccc; 
             background: #5cb85c; 
-            border-radius: 8px; /* Bordes más redondeados */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra más pronunciada */
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
         }
         .boton:hover {
             background-color: #4cae4c; /* Color al pasar el mouse */

@@ -10,44 +10,44 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/general.css">
     <style>
         .container { 
-            width: 350px; /* Un poco más de ancho */
+            width: 350px;
             margin: 30px auto; 
             padding: 25px; 
             border: 1px solid #ccc; 
             background: white; 
-            border-radius: 8px; /* Bordes más redondeados */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra más pronunciada */
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
         }
         .form-group { 
-            margin-bottom: 18px; /* Más espacio entre grupos */
+            margin-bottom: 18px; 
         }
         .form-group label { 
             display: block; 
-            margin-bottom: 6px; /* Espacio entre label e input */
+            margin-bottom: 6px; 
             font-weight: bold; 
-            color: #555; /* Color de label */
+            color: #555; 
         }
         /* ESTILO COMÚN PARA INPUTS DE TEXTO, EMAIL, PASSWORD */
         input[type="text"], 
         input[type="password"], 
         input[type="email"] { 
             width: 100%; 
-            padding: 10px; /* Padding más generoso */
+            padding: 10px; 
             border: 1px solid #ddd; 
             border-radius: 4px; 
-            box-sizing: border-box; /* IMPORTANTE para que el padding no aumente el ancho total */
+            box-sizing: border-box; 
             font-size: 1em;
         }
         .btn { 
             color: white; 
-            padding: 12px 18px; /* Botones más grandes */
+            padding: 12px 18px; 
             border: none; 
             cursor: pointer; 
             border-radius: 4px; 
-            font-size: 1.05em; /* Fuente ligeramente más grande */
-            width: 100%; /* Para que ocupen todo el ancho disponible */
-            margin-top: 10px; /* Espacio antes del botón */
-            transition: background-color 0.3s ease; /* Transición suave */
+            font-size: 1.05em; 
+            width: 100%; 
+            margin-top: 10px; 
+            transition: background-color 0.3s ease; 
         }
         .btn-login { background: #5cb85c; /* Verde para login */ }
         .btn-login:hover { background: #4cae4c; }
@@ -120,9 +120,9 @@
         <%-- ======================================================================= --%>
         <%-- FORMULARIO DE REGISTRO                                                    --%>
         <%-- ======================================================================= --%>
-        <%-- 'action': También apunta al AppController. --%>
+        <%-- action: también apunta al AppController. --%>
         <form action="${pageContext.request.contextPath}/app" method="post">
-            <%-- CAMPO OCULTO 'accion':
+            <%-- CAMPO OCULTO accion:
                  Su valor ("registro") le dice al AppController que esta petición es para la acción de registro. --%>
             <input type="hidden" name="accion" value="registro">
             
