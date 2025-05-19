@@ -4,43 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-// -----------------------------------------------------------------------------
-// CLASE AccionEliminarDelCarrito
-// -----------------------------------------------------------------------------
-
-/**
- * ============================================================================
- * CLASE AccionEliminarDelCarrito
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase maneja la lógica de negocio para eliminar un ítem (o una unidad de un ítem)
- * del carrito de la compra del usuario.
- * Es invocada por el AppController cuando el parámetro "accion" es "eliminarCD".
- *
- * FUNCIONAMIENTO:
- * 1. Intenta obtener la sesión HTTP existente del usuario (no crea una nueva si no existe).
- * 
- * 2. Si la sesión existe, intenta obtener el objeto Carrito de la sesión.
- * 
- * 3. Si el Carrito existe, obtiene el parámetro "index" de la petición, que indica
- *    la posición del ítem a eliminar/modificar en la lista de CDs del carrito.
- * 
- * 4. Convierte el "index" a un entero.
- * 
- * 5. Llama al método eliminarItem(index) del objeto Carrito. Este método
- *    se encargará de decrementar la cantidad del CD en esa posición o de
- *    eliminarlo completamente si la cantidad llega a cero.
- * 
- * 6. Maneja posibles errores, como un "index" inválido (que no sea un número).
- * 
- * 7. Después de intentar la eliminación, SIEMPRE realiza una redirección (sendRedirect)
- *    a la acción "verCarrito" (manejada por AppController). Esto es para que el
- *    usuario vea el estado actualizado del carrito y para seguir el patrón PRG.
- * 
- * 8. Devuelve null para indicar al AppController que la respuesta ya fue manejada.
- */
 public class AccionEliminarDelCarrito implements Accion 
 {
     /**
@@ -92,7 +55,7 @@ public class AccionEliminarDelCarrito implements Accion
                         // para realizar la lógica de eliminación o decremento de cantidad.
                         carrito.eliminarItem(index);
 
-                        // OPCIONAL: Volver a guardar el objeto carrito en la sesión.
+                        // Volver a guardar el objeto carrito en la sesión.
                         // session.setAttribute("carrito", carrito);
                         // Aunque el objeto carrito obtenido de la sesión es modificado por referencia
                         // (su lista interna de 'items' cambia).

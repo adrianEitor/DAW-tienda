@@ -9,35 +9,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * ============================================================================
- * CLASE AccionProcesarPago
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase se encarga de la lógica final para procesar el pago de un cliente.
- * Esto incluye:
- * 
- * 1. Validar que exista una sesión activa y un usuario autenticado.
- * 
- * 2. Validar que el carrito no esté vacío y que la instancia de BaseDatos esté disponible.
- * 
- * 3. Obtener y validar el importe final confirmado (que debería enviarse desde pago.jsp).
- * 
- * 4. Crear un nuevo objeto Pedido con la información del usuario y el importe.
- * 
- * 5. Guardar el nuevo Pedido en la base de datos a través de BaseDatos (que usa PedidosDAO).
- * 
- * 6. Vaciar el carrito de la compra del usuario en la sesión.
- * 
- * 7. Preparar un mensaje de éxito o error para mostrar en la página de pago (pago.jsp).
- * 
- * 8. Devolver la ruta a pago.jsp para que el AppController realice un forward.
- *
- * Es invocada por el AppController cuando el parámetro "accion" es "procesarPago",
- * típicamente desde un formulario de confirmación en pago.jsp.
- */
 public class AccionProcesarPago implements Accion 
 {
      /**

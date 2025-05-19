@@ -5,22 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * ============================================================================
- * CLASE AccionLogin
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase se encarga de procesar la petición de inicio de sesión de un usuario.
- * Valida las credenciales (email y contraseña) proporcionadas contra la base de datos.
- * Si el login es exitoso, establece el usuario autenticado en la sesión HTTP
- * y redirige al usuario a la página principal (o a otra página designada).
- * Si el login falla, prepara un mensaje de error y reenvía al usuario
- * de vuelta a la página de login para que lo intente de nuevo.
- *
- * Es invocada por el AppController cuando el parámetro "accion" es "login".
- */
 public class AccionLogin implements Accion 
 {
 
@@ -80,7 +64,6 @@ public class AccionLogin implements Accion
         try 
         {
             // Si la instancia de BaseDatos no estaba en sesión, se crea una nueva.
-            // ¡Considerar las implicaciones de tener una conexión a BD por sesión! (Antipatrón)
             if (bd == null) 
             {
                 System.out.println("AccionLogin: Instancia de BaseDatos no encontrada en sesión, creando una nueva.");
@@ -95,9 +78,6 @@ public class AccionLogin implements Accion
             Usuario usuario = bd.obtenerUsuarioPorEmail(email);
             
             // Validar las credenciales.
-            // IMPORTANTE: En un entorno de producción, NUNCA guardar ni comparar contraseñas
-            // en texto plano. Deberías usar una función de hash segura.
-            // para almacenar las contraseñas y para comparar la contraseña ingresada.
             if (usuario != null && usuario.getPassword().equals(password)) 
             { 
                  // --- LOGIN EXITOSO ---

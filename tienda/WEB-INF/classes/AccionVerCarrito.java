@@ -4,26 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * ============================================================================
- * CLASE AccionVerCarrito
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase se encarga de la lógica para preparar y mostrar el contenido actual
- * del carrito de la compra del usuario.
- * Su tarea principal es obtener el objeto Carrito de la sesión HTTP. Si no existe
- * un carrito en la sesión (por ejemplo, si es la primera vez que el usuario visita
- * la página del carrito o si la sesión ha expirado y se ha creado una nueva),
- * se crea un objeto Carrito vacío.
- * Luego, este objeto Carrito (existente o nuevo y vacío) se coloca como un
- * atributo en el objeto request para que la vista (verCarrito.jsp) pueda
- * acceder a él y mostrar su contenido (o un mensaje de carrito vacío).
- * Finalmente, devuelve la ruta al verCarrito.jsp.
- *
- * Es invocada por el AppController cuando el parámetro "accion" es "verCarrito".
- */
 public class AccionVerCarrito implements Accion 
 {
 
@@ -52,7 +32,7 @@ public class AccionVerCarrito implements Accion
         if (session != null) 
         {
             System.out.println("AccionVerCarrito: Sesión encontrada. Intentando obtener 'carrito'.");
-            // Intentar obtener el objeto 'Carrito' que podría estar almacenado en la sesión.
+            // Intentar obtener el objeto Carrito que podría estar almacenado en la sesión.
             // La clave "carrito" debe ser la misma utilizada en otras acciones (ej., AccionAgregarAlCarrito).
             carrito = (Carrito) session.getAttribute("carrito");
             
@@ -83,18 +63,6 @@ public class AccionVerCarrito implements Accion
             System.out.println("AccionVerCarrito: Carrito es null, creando una nueva instancia vacía.");
 
             carrito = new Carrito();
-            // El objetivo principal aquí es pasar un objeto Carrito no-null a la vista.
-            // OPCIONAL: Si se desea que este carrito vacío recién creado persista en la sesión
-            // inmediatamente (incluso antes de que el usuario añada algo), se podría hacer:
-            // if (session != null) { // Solo si la sesión original existía
-            //    session.setAttribute("carrito", carrito);
-            //    System.out.println("AccionVerCarrito: Carrito vacío guardado en sesión existente.");
-            // } else {
-            //    // Si la sesión era null, no podemos guardar en sesión aquí.
-            //    // AccionAgregarAlCarrito creará la sesión y guardará el carrito cuando se añada el primer ítem.
-            // }
-            // En la mayoría de los casos, no es estrictamente necesario guardar un carrito vacío
-            // en sesión aquí, ya que AccionAgregarAlCarrito lo hará si es necesario.
         }
         
         // --- 4. PREPARACIÓN DE DATOS PARA LA VISTA (JSP) ---

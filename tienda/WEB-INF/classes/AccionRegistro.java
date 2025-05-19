@@ -5,22 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * ============================================================================
- * CLASE AccionRegistro
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase se encarga de la lógica de negocio para registrar un nuevo usuario
- * en la aplicación. Recibe los datos del formulario de registro, realiza
- * validaciones básicas, interactúa con la capa de acceso a datos (BaseDatos y
- * UsuariosDAO) para persistir el nuevo usuario, y finalmente determina a qué
- * vista (JSP) redirigir al usuario (generalmente a la página de login con un
- * mensaje de éxito o de vuelta a la página de registro con un mensaje de error).
- *
- * Es invocada por el AppController cuando el parámetro "accion" es "registro".
- */
 public class AccionRegistro implements Accion 
 {
 

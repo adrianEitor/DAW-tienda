@@ -18,29 +18,32 @@ import javax.servlet.http.HttpServletResponse;
  *
  * IMPLICACIONES DE USAR UN ÚNICO SERVLET (FRONT CONTROLLER):
  * 
- * 1.  Centralización del Control: En lugar de tener múltiples servlets mapeados a
+ * 1.  Centralización del control: En lugar de tener múltiples servlets mapeados a
  *     diferentes URLs para cada funcionalidad (como tenías antes: CarritoServlet,
  *     LoginServlet, etc.), AppController recibe las peticiones y decide qué
  *     lógica específica ejecutar. Esto se hace típicamente a través de un parámetro
  *     en la petición (como `?accion=nombreDeLaAccion`).
  * 
- * 2.  Separación de Responsabilidades Mejorada:
+ * 2.  Separación de responsabilidades:
+ * 
  *     - El AppController se enfoca en el enrutamiento, la delegación y el manejo
  *       general de la petición/respuesta.
+ * 
  *     - La lógica de negocio específica para cada acción se encapsula en clases
  *       separadas (tus clases Accion...java, que actúan como "Helpers" o "Services").
  * 
- * 3.  Mantenibilidad: Añadir nuevas funcionalidades o modificar existentes
+ * 3.  Mantenibilidad: añadir nuevas funcionalidades o modificar existentes
  *     generalmente implica crear/modificar una clase Accion y añadir un caso
  *     al switch (o a un mapa de acciones) en el AppController, en lugar de
  *     crear un nuevo servlet completo y su mapeo en web.xml.
  * 
- * 4.  Reusabilidad de Lógica Común: Tareas comunes a muchas peticiones
+ * 4.  Reusabilidad: tareas comunes a muchas peticiones
  *     (como comprobaciones de seguridad, logging, inicialización de recursos)
  *     pueden manejarse en un solo lugar dentro del AppController o en filtros
  *     que actúen antes de él.
  * 
- * 5.  Flujo de Trabajo:
+ * 5.  Flujo de trabajo:
+ * 
  *     a. El cliente (navegador) envía una petición a una URL mapeada a este AppController
  *        (ej., `/app?accion=verCarrito`).
  * 
@@ -61,13 +64,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AppController extends HttpServlet 
 {
-
-    // No es estrictamente necesario un método init() para instanciar las clases Accion
-    // si se crean nuevas instancias en cada llamada a processRequest (como está ahora).
-    // Si las clases Accion fueran sin estado (stateless) y costosas de crear,
-    // se podría considerar un patrón Factory o almacenarlas como miembros si son seguras para hilos.
-    // Para esta aplicación, crear una nueva instancia de Accion por petición es simple y seguro.
-
      /**
      * ------------------------------------------------------------------------
      * MÉTODO processRequest
@@ -80,13 +76,11 @@ public class AppController extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
     {
         // Establecer la codificación de caracteres para la petición.
-        // Ayuda a manejar correctamente caracteres especiales (acentos, ñ, etc.)
-        // que puedan venir en los parámetros del formulario. Es una buena práctica.
         request.setCharacterEncoding("UTF-8");
         
          // --- 1. DETERMINAR LA ACCIÓN SOLICITADA ---
 
-        // Obtener el parámetro 'accion' de la URL (ej., /app?accion=verCarrito)
+        // Obtener el parámetro accion de la URL (ej., /app?accion=verCarrito)
         // o de un campo oculto en un formulario.
         String accionParam = request.getParameter("accion");
 
@@ -106,8 +100,6 @@ public class AppController extends HttpServlet
         // Se utiliza un bloque switch para determinar qué clase Accion instanciar
         // basándose en el valor de accionParam.
         // accionParam.toLowerCase() se usa para hacer la comparación insensible a mayúsculas/minúsculas.
-        // Para aplicaciones más grandes, esto podría refactorizarse usando un patrón Factory
-        // o un Map para un despacho de acciones más dinámico y mantenible.
         switch (accionParam.toLowerCase()) 
         {
             case "agregarcd": // Si la acción es "agregarcd" (enviada desde el formulario de index.jsp)
@@ -171,8 +163,6 @@ public class AppController extends HttpServlet
             else if (vistaDestino == null && !response.isCommitted())
             {
                  // Este caso es menos común: la acción devolvió null pero no hizo sendRedirect.
-                 // Podría indicar un error en la lógica de la acción o una acción que genera
-                 // contenido directamente sin un JSP (ej. una respuesta JSON, no aplicable aquí).
                  System.err.println("AppController: La acción devolvió null para vistaDestino, pero la respuesta no fue committed. Revise la lógica de la acción: " + (accionEjecutar != null ? accionEjecutar.getClass().getSimpleName() : "Acción directa a vista nula"));
                  
                 // Considerar enviar a una página de error por defecto si esto no es esperado.
@@ -199,7 +189,6 @@ public class AppController extends HttpServlet
              // Intentar hacer forward a una página de error, solo si la respuesta no ha sido enviada ya.
             if (!response.isCommitted()) 
             {
-                // Usar tu clase NavegadorVistas para ir a una página de error.
                 NavegadorVistas.irAPagina("/error.jsp", request, response);
             }
         }

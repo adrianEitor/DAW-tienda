@@ -12,7 +12,7 @@
     <style>
         .cart-image { width: 100px; height: auto; display: block; margin: 10px auto; }
         .container { 
-            width: 50%; /* Un poco más de ancho */
+            width: 50%; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -20,8 +20,8 @@
             padding: 25px; 
             border: 1px solid #ccc; 
             background: white; 
-            border-radius: 8px; /* Bordes más redondeados */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra más pronunciada */
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
         }
         .centrar-botones{
             width: 50%;
@@ -35,11 +35,11 @@
             align-items: center;
             border: 1px solid #ccc; 
             background: #5cb85c; 
-            border-radius: 8px; /* Bordes más redondeados */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra más pronunciada */
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
         }
         .boton:hover {
-            background-color: #4cae4c; /* Color al pasar el mouse */
+            background-color: #4cae4c; 
         }   
         a {
             color: white;
@@ -92,7 +92,6 @@
     </div>
 
     <%-- LÓGICA DE PRESENTACIÓN DEL CARRITO USANDO JSTL y EL --%>
-    <%-- JSTL <c:choose> permite una estructura condicional similar a if-else if-else. --%>
     <c:choose>
 
          <%-- Condición <c:when>: Se ejecuta si el carrito NO está vacío.
@@ -116,13 +115,13 @@
                     </thead>
                     <tbody>
                         
-                        <%-- JSTL <c:forEach>: Itera sobre una colección.
-                            items="${carrito.items}": La colección sobre la que se itera. EL (${carrito.items})
-                                                    accede a la propiedad 'items' del JavaBean 'Carrito'
+                        <%-- 
+                            items="${carrito.items}": la colección sobre la que se itera. EL (${carrito.items})
+                                                    accede a la propiedad items del JavaBean Carrito
                                                     (invocando su método getItems()), que devuelve la List<CD>.
-                            var="cdItem": Nombre de la variable que representará cada elemento (un objeto CD)
+                            var="cdItem": nombre de la variable que representará cada elemento (un objeto CD)
                                         en cada iteración del bucle.
-                            varStatus="loop": Crea una variable 'loop' que proporciona información sobre
+                            varStatus="loop": crea una variable loop que proporciona información sobre
                                             el estado de la iteración (ej., loop.index para el índice actual). --%>
                         <c:forEach var="cdItem" items="${carrito.items}" varStatus="loop">
                             <tr>
@@ -135,7 +134,7 @@
                                 <td>${cdItem.titulo} | ${cdItem.artista} | ${cdItem.pais}</td>
                                 <td class="center-text">${cdItem.cantidad}</td> <%-- invoca cdItem.getCantidad() --%>
                                 
-                                <%-- Uso de JSTL <fmt:formatNumber> para mostrar el precio unitario del CD como moneda. --%>
+                                <%-- JSTL <fmt:formatNumber> para mostrar el precio unitario del CD como moneda. --%>
                                 <%-- value="${cdItem.precio}" accede a cdItem.getPrecio() --%>
                                 <td class="right-text"><fmt:formatNumber value="${cdItem.precio}" type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2"/></td>
                                 
@@ -144,7 +143,7 @@
                                 <td class="right-text"><fmt:formatNumber value="${cdItem.importe}" type="currency" currencySymbol="$" minFractionDigits="2" maxFractionDigits="2"/></td>
                                 
                                 <td class="eliminar">
-                                    <%-- Enlace para eliminar un ítem. Apunta al AppController con la acción 'eliminarCD'.
+                                    <%-- Enlace para eliminar un ítem. Apunta al AppController con la acción eliminarCD.
                                         Se pasa el index del ítem actual en el bucle como parámetro de la URL.
                                         EL (${loop.index}) obtiene el índice de la iteración actual. --%>
                                     <a href="${pageContext.request.contextPath}/app?accion=eliminarCD&index=${loop.index}">Eliminar uno</a>
@@ -164,7 +163,7 @@
                 </table>
                 <div class="centrar-botones" style="margin-top: 20px;"> 
                     <a href="${pageContext.request.contextPath}/index.jsp"><p class="boton">Sigo comprando</p></a>
-                    <%-- CAMBIO: ENLACE A AppController CON ACCIÓN --%>
+                    
                     <a href="${pageContext.request.contextPath}/app?accion=calcularPago"><p class="boton">Pagar</p></a>
                 </div>
             </div>

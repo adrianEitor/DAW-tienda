@@ -5,36 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * ============================================================================
- * CLASE AccionAgregarAlCarrito
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase encapsula toda la lógica de negocio necesaria para procesar la
- * solicitud de un usuario de agregar un CD (con una cantidad específica) a su
- * carrito de la compra.
- * Es un "Worker" o "Helper" en el patrón Service to Worker, invocado por el
- * AppController cuando el parámetro "accion" es "agregarCD".
- *
- * FUNCIONAMIENTO:
- * 1. Obtiene o crea la sesión HTTP del usuario.
- * 2. Obtiene el objeto Carrito de la sesión. Si no existe, crea uno nuevo y lo guarda en sesión.
- * 3. Recupera los parámetros de la petición: el CD seleccionado (una cadena con
- *    información del CD separada por '|') y la cantidad deseada.
- * 4. Parsea la cantidad, con un valor por defecto si es inválida.
- * 5. Parsea la información del CD seleccionado (título, artista, país, precio)
- *    utilizando StringTokenizer.
- * 6. Crea un nuevo objeto CD (JavaBean) y establece sus propiedades con los
- *    datos parseados.
- * 7. Llama al método agregarItem() del objeto Carrito para añadir el nuevo CD
- *    (o actualizar la cantidad si el CD ya existía).
- * 8. Realiza una redirección (sendRedirect) a la acción "verCarrito" (manejada
- *    por AppController) para que el usuario vea el carrito actualizado.
- *    Esto sigue el patrón Post/Redirect/Get para evitar reenvíos de formulario.
- * 9. Devuelve null para indicar al AppController que la respuesta ya fue manejada.
- */
 public class AccionAgregarAlCarrito implements Accion 
 {
 

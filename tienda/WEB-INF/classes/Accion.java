@@ -1,18 +1,6 @@
-
 import java.io.IOException;
-
-// Importa la clase ServletException para manejar errores generales
-// específicos de la tecnología Servlet. Por ejemplo, si un forward falla.
 import javax.servlet.ServletException;
-
-// Importa la interfaz HttpServletRequest, que representa la petición HTTP
-// hecha por el cliente al servidor. Contiene información como parámetros,
-// cabeceras, cookies, y permite establecer atributos.
 import javax.servlet.http.HttpServletRequest;
-
-// Importa la interfaz HttpServletResponse, que representa la respuesta HTTP
-// que el servidor enviará de vuelta al cliente. Permite establecer
-// cabeceras, el tipo de contenido, y escribir el cuerpo de la respuesta.
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -20,16 +8,16 @@ import javax.servlet.http.HttpServletResponse;
  * INTERFAZ Accion
  * ============================================================================
  * PROPÓSITO:
+ * 
  * Esta interfaz define un contrato para todas las acciones o comandos que
  * la aplicación puede ejecutar en respuesta a una petición del usuario.
- * Es una pieza central del patrón de diseño Front Controller (en tu caso, AppController)
- * y del patrón Command (donde cada acción concreta es un comando).
  *
  * FUNCIONAMIENTO EN EL PATRÓN MVC (Model-View-Controller) / SERVICE TO WORKER:
  * 
  * 1. El AppController (Front Controller) recibe una petición HTTP.
  * 
  * 2. Determina qué acción específica se ha solicitado (ej., "agregarCD", "verCarrito").
+ * 
  * 3. Crea o localiza una instancia de una clase que implementa esta interfaz Accion
  *    (por ejemplo, AccionAgregarAlCarrito, AccionVerCarrito). Estas clases
  *    son los "Workers" o "Helpers" que contienen la lógica de negocio.
@@ -37,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  * 4. El AppController invoca el método ejecutar() de la instancia de Accion seleccionada.
  * 
  * 5. La clase Accion concreta:
+ * 
  *    a. Realiza la lógica de negocio (interactúa con el Modelo: JavaBeans, DAOs).
  * 
  *    b. Prepara los datos que la Vista (JSP) necesitará (generalmente poniéndolos
@@ -45,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  *    c. Decide a qué Vista (JSP) se debe redirigir o hacer forward.
  *
  * VENTAJA DE USAR UNA INTERFAZ:
+ * 
  * - El AppController solo necesita conocer la interfaz Accion,
  *   no los detalles de implementación de cada acción específica. Esto hace que el
  *   AppController sea más genérico y fácil de mantener.
@@ -67,10 +57,9 @@ import javax.servlet.http.HttpServletResponse;
  *    o manejará la respuesta completamente (por ejemplo, realizando un sendRedirect).
  */
 
-// public para que sea accesible desde otros paquetes (como el controlador)
 public interface Accion 
 {
-        /**
+    /**
      * ------------------------------------------------------------------------
      * MÉTODO ejecutar
      * ------------------------------------------------------------------------
@@ -83,15 +72,23 @@ public interface Accion
      * 1. Obtener parámetros de la petición (request.getParameter()).
      * 
      * 2. Interactuar con la lógica de negocio (Modelo):
+     * 
      *    - Obtener o crear objetos JavaBean (ej., Carrito).
+     * 
      *    - Llamar a métodos de clases de servicio o DAOs si es necesario.
+     * 
      *    - Manipular datos (ej., agregar un CD al carrito).
+     * 
      * 3. Preparar datos para la Vista:
+     * 
      *    - Colocar objetos o resultados en el request scope (request.setAttribute())
      *      o en el session scope (`session.setAttribute()) para que el JSP
      *      pueda acceder a ellos usando Expression Language (EL).
+     * 
      * 4. Determinar el flujo de navegación:
+     * 
      *    - Devolver la ruta (String) al archivo JSP al que se debe hacer forward.
+     * 
      *    - O, si la acción realiza una redirección (response.sendRedirect()),
      *      este método debe devolver null para indicar al AppController que
      *      la respuesta ya ha sido gestionada y no se necesita hacer forward.

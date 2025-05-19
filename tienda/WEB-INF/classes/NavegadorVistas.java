@@ -1,7 +1,5 @@
-// package com.tuproyecto.util; // Si usas paquetes
-
 import java.io.IOException;
-import javax.servlet.RequestDispatcher; // O javax.* si usas Tomcat 9
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,27 +9,16 @@ import javax.servlet.http.HttpServletResponse;
  * CLASE NavegadorVistas
  * ============================================================================
  * PROPÓSITO:
- * Esta es una clase de utilidad (utility class) diseñada para centralizar y
+ * Esta es una clase de utilidad  diseñada para centralizar y
  * simplificar la lógica de reenvío (forward) de peticiones desde un servlet
  * (típicamente el AppController) a una vista JSP.
- * Encapsula la obtención del RequestDispatcher y la llamada al método `forward`.
- * Es conceptualmente similar al método `gotoPage()` que se muestra en tus
- * diapositivas como parte de un patrón Dispatcher.
+ * Encapsula la obtención del RequestDispatcher y la llamada al método forward.
  *
- * CARACTERISTICAS DE UNA CLASE DE UTILIDAD:
- * - Generalmente contiene solo métodos estáticos.
- * - A menudo tiene un constructor privado para prevenir su instanciación, ya que
- *   no tiene sentido crear objetos de una clase que solo ofrece métodos estáticos.
  */
 public class NavegadorVistas 
 {
 
     // --- CONSTRUCTOR PRIVADO ---
-    /**
-     * Constructor privado para evitar que se creen instancias de esta clase de utilidad.
-     * Todos sus métodos son estáticos y se deben llamar directamente usando el nombre de la clase
-     * (ej. NavegadorVistas.irAPagina(...)).
-     */
     private NavegadorVistas() 
     { 
         // Este constructor está vacío y es privado para reforzar el patrón de clase de utilidad. 
@@ -74,7 +61,7 @@ public class NavegadorVistas
         
         // --- VALIDACIÓN DE LA RUTA DEL JSP ---
 
-        // Es una buena práctica verificar que la ruta proporcionada no sea nula o vacía.
+        // Verificar que la ruta proporcionada no sea nula o vacía.
         if (rutaJSP == null || rutaJSP.trim().isEmpty()) 
         {
             // Manejar error de ruta no especificada, por ejemplo, enviando a una página de error general

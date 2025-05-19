@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page session="true" %> <%-- Buena práctica tenerla, aunque sea el default --%>
+<%@ page session="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciar Sesión o Registrarse</title>
-    <%-- ENLACE A TU CSS EXTERNO SI LO TIENES --%>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/general.css">
     <style>
         .container { 
@@ -95,32 +94,13 @@
 
             <div class="form-group">
                 <label for="emailLogin">Email:</label>
-                <%-- CAMPO DE ENTRADA PARA EL EMAIL:
-                     type="email": Indica al navegador que espere una dirección de email,
-                                   puede activar validaciones básicas del navegador.
-                     id="emailLogin": Identificador único para este elemento en la página (útil para JavaScript o el 'for' de la label).
-                     name="email_login": NOMBRE DEL PARÁMETRO que se enviará al servidor.
-                                        AccionLogin leerá request.getParameter("email_login").
-                     required: Atributo HTML5 que indica que este campo no puede estar vacío.
-                     value="${param.email_login}": REPOBLACIÓN DEL CAMPO. Si AccionLogin detecta un error
-                                                 y hace forward de vuelta a esta página, y si puso
-                                                 el email original como un atributo del request llamado
-                                                 "param_email_login" (o si el forward conserva los parámetros originales),
-                                                 este campo se rellenará con el valor que el usuario había ingresado.
-                                                 Alternativamente, si AccionLogin usa request.setAttribute("emailLoginValor", email);
-                                                 entonces aquí sería value="${emailLoginValor}".
-                                                 `${param.nombre}` accede directamente a los parámetros de la petición original. --%>
+
                 <input type="email" id="emailLogin" name="email_login" required value="${param.email_login}">
             </div>
 
             <div class="form-group">
                 <label for="passwordLogin">Contraseña:</label>
-                 <%-- CAMPO DE ENTRADA PARA LA CONTRASEÑA:
-                     type="password": Los caracteres se muestran ocultos (ej. asteriscos).
-                     id="passwordLogin": Identificador único.
-                     name="password_login": NOMBRE DEL PARÁMETRO para el servidor.
-                     required: Campo obligatorio.
-                     (No se repobla la contraseña por razones de seguridad). --%>
+                 <%-- CAMPO DE ENTRADA PARA LA CONTRASEÑA: --%>
                 <input type="password" id="passwordLogin" name="password_login" required>
             </div>
             

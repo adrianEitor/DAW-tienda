@@ -4,29 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * ============================================================================
- * CLASE AccionCalcularPago
- * ============================================================================
- * IMPLEMENTA: Interfaz Accion
- *
- * PROPÓSITO:
- * Esta clase se encarga de la lógica para preparar la información necesaria
- * antes de que el usuario proceda a la página de confirmación de pago.
- * Su responsabilidad principal es:
- * 
- * 1. Obtener el carrito de la compra actual del usuario desde la sesión HTTP.
- * 
- * 2. Calcular el importe total a pagar basándose en los ítems del carrito.
- * 
- * 3. Poner este importe total y el propio objeto Carrito como atributos en el
- *    objeto request para que la página JSP de pago (pago.jsp) pueda acceder a ellos.
- * 
- * 4. Devolver la ruta al pago.jsp para que el AppController realice un forward.
- *
- * Es invocada por el AppController cuando el parámetro "accion" es "calcularPago"
- * (típicamente cuando el usuario hace clic en "Me largo a pagar" desde la vista del carrito).
- */
 public class AccionCalcularPago implements Accion 
 {
 

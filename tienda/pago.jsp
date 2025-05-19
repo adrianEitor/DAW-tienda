@@ -1,61 +1,18 @@
 <%--
 ====================================================================================================
-ARCHIVO: pago.jsp
+FICHERO: pago.jsp
 ----------------------------------------------------------------------------------------------------
-PROPÓSITO DE ESTA PÁGINA JSP:
 Esta página cumple un doble rol en el flujo de finalización de la compra:
 
-1.  ESTADO DE CONFIRMACIÓN DE PAGO:
+- Confirmación de pago: cuando vengo del carrito después de calcular el total, 
+esta página me muestra los productos, el precio final y un botón para "Confirmar y Pagar". 
+Si le doy, llamo a la acción procesarPago. Esto pasa si no hay un mensaje de 
+pago exitoso todavía.
 
-    - Se muestra cuando el usuario es redirigido aquí DESPUÉS de que la acción
-      AccionCalcularPago (invocada desde el carrito) ha preparado el total a pagar.
-
-    - En este estado, la página:
-
-        a) Muestra un resumen de los ítems que están actualmente en el carrito 
-           (obtenidos del atributo carritoParaConfirmar puesto en el request por AccionCalcularPago).
-
-        b) Muestra el importeFinal calculado.
-
-        c) Presenta un formulario con un botón "Confirmar y Pagar Ahora".
-
-    - Al enviar este formulario, se invoca la acción procesarPago del AppController.
-
-    - Este estado se activa visualmente cuando el atributo mensajeExito (que indica
-    un pago ya procesado) está vacío o no existe en el request.
-
-2.  ESTADO DE RESULTADO DEL PAGO:
-
-    - Se muestra cuando el usuario es redirigido aquí DESPUÉS de que la acción
-      AccionProcesarPago ha intentado procesar el pago y guardar el pedido.
-
-    - En este estado, la página:
-
-        a) Muestra un mensaje de éxito (mensajeExito) o de error (error)
-           proveniente de AccionProcesarPago.
-
-        b) Si el pago fue exitoso, muestra un informe detallado de los ítems que se
-           compraron (obtenidos del atributo itemsDelPedido puesto en el request
-           por AccionProcesarPago, que es una copia de los ítems del carrito antes de vaciarlo).
-
-        c) Muestra el importeFinal que fue procesado (o intentado procesar).
-
-    - Este estado se activa visualmente cuando el atributo mensajeExito está presente
-      en el request.
-
-FLUJO DE DATOS ESPERADO:
-- DESDE AccionCalcularPago (para el estado de confirmación):
-    - request.setAttribute("importeFinal", floatConElTotal);
-    - request.setAttribute("carritoParaConfirmar", objetoCarritoActual);
-    
-- DESDE AccionProcesarPago (para el estado de resultado):
-    - request.setAttribute("mensajeExito", "Mensaje de éxito..." ); O request.setAttribute("error", "Mensaje de error...");
-    - request.setAttribute("itemsDelPedido", List<CD>ConItemsComprados); (si éxito)
-    - request.setAttribute("importeFinal", floatConElTotalProcesado);
-
-La lógica condicional dentro de este JSP (usando JSTL <c:if> y <c:choose>)
-determina qué secciones se renderizan basándose en la presencia y el valor de
-estos atributos del request.
+- Resultado del pago: después de que la acción AccionProcesarPago intente el
+pago, vuelvo aquí. La página me dice si el pago fue bien (mensajeExito) 
+o si hubo un error. Si todo fue bien, me enseña los productos que compré 
+y el total pagado. Esto se muestra si sí hay un mensajeExito.
 ====================================================================================================
 --%>
 
@@ -74,7 +31,6 @@ estos atributos del request.
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/general.css">
 
      <style>
-        /* ESTILOS BÁSICOS (puedes moverlos a tu estilo.css) */
         body { font-family: Arial, sans-serif; background-color: #FDF5E6; margin-top: 20px;}
         .container { width: 70%; max-width: 800px; margin: 30px auto; padding: 20px; background-color: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .center-text { text-align:center; }
@@ -107,14 +63,12 @@ estos atributos del request.
         .tabla-resumen .right-text { text-align: right; }
         .tabla-resumen .center-text { text-align: center; }
 
-        /* TUS ESTILOS ORIGINALES PARA BOTONES Y ENLACES */
         .boton {
             padding: 10px 15px; /* Ajustado para consistencia con input[type="submit"] */
-            /* flex-direction, align-items no aplican bien a <a> o <p> directamente */
             border: 1px solid #ccc; 
             background: #5cb85c; 
-            color: white; /* AÑADIDO: para que el texto del enlace sea blanco */
-            text-decoration: none; /* AÑADIDO: para quitar subrayado de enlace */
+            color: white; 
+            text-decoration: none; 
             border-radius: 8px; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             display: inline-block; /* Para que el padding y margin funcionen bien */
@@ -123,17 +77,16 @@ estos atributos del request.
         .boton:hover {
             background-color: #4cae4c;
         }   
-        /* 'a' global no es ideal, mejor aplicar clases a los enlaces específicos */
-        /* a { color: white; text-decoration: none; } */
+        
 
-        .boton.volver { /* Clase específica para el botón/enlace "Volver" */
+        .boton.volver { 
             background: #007bff; 
         }
         .boton.volver:hover {
              background: #0056b3;
         }
 
-        input[type="submit"] { /* Estilo para el botón de submit */
+        input[type="submit"] { 
             padding: 10px 15px;
             border: 1px solid #4cae4c; 
             background: #5cb85c; 
@@ -263,7 +216,7 @@ estos atributos del request.
             <img src="${pageContext.request.contextPath}/images/cash_register.png" alt="Caja Registradora" class="payment-image"/>
         </c:if>
         
-        <%-- ENLACE PARA VOLVER A LA TIENDA (Siempre visible) --%>
+        <%-- ENLACE PARA VOLVER A LA TIENDA (siempre visible) --%>
         <%-- Aplicando tu clase boton y volver a la etiqueta <a> directamente --%>
         <a href="${pageContext.request.contextPath}/index.jsp" class="boton volver" style="margin-top: 20px;">Volver a la Tienda</a>
 
