@@ -33,28 +33,6 @@ import javax.servlet.http.HttpServletResponse;
  * 
  *    c. Decide a qué Vista (JSP) se debe redirigir o hacer forward.
  *
- * VENTAJA DE USAR UNA INTERFAZ:
- * 
- * - El AppController solo necesita conocer la interfaz Accion,
- *   no los detalles de implementación de cada acción específica. Esto hace que el
- *   AppController sea más genérico y fácil de mantener.
- * 
- * - Para añadir una nueva funcionalidad a la aplicación, solo
- *   necesitas crear una nueva clase que implemente esta interfaz Accion y
- *   añadir un caso al AppController para que la invoque. No necesitas modificar
- *   la estructura central del controlador para cada nueva acción.
- * 
- * - El AppController puede tratar a todas las diferentes clases de acción
- *   de manera uniforme a través de la referencia de tipo Accion.
- *
- * Cada implementación de esta interfaz:
- * 
- *  - Manejará la lógica de negocio específica para una solicitud particular.
- * 
- *  - Preparará los datos necesarios para la vista (si es que hay una vista a la que hacer forward).
- * 
- *  - Determinará la ruta a la siguiente vista (JSP) a la que se debe despachar la petición,
- *    o manejará la respuesta completamente (por ejemplo, realizando un sendRedirect).
  */
 
 public interface Accion 
